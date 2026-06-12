@@ -1,0 +1,42 @@
+{{extend elemLayout}}
+
+{{block 'css'}}
+<link rel="stylesheet" type="text/css" href="{{_res_path}}/bh3/bh3.css?v=1.6"/>
+{{/block}}
+
+{{block 'main'}}
+<div class="bh3-cont">
+  <div class="head-box ov-head" {{if bg}}style="background-image:linear-gradient(60deg, rgba(38,42,54,0.92), rgba(38,42,54,0.55)), url({{bg}})"{{/if}}>
+    {{if role.AvatarUrl}}<span class="ov-avatar" style="background-image:url({{role.AvatarUrl}})"></span>{{/if}}
+    <div class="ov-info">
+      <div class="title">{{role.nickname}}</div>
+      <div class="label">UID:{{uid}}</div>
+      <div class="label">Lv.{{role.level}} · {{role.region}}</div>
+      {{if preference.comprehensive_rating}}
+      <div class="label">综合评分 <b>{{preference.comprehensive_rating}}</b>（{{preference.comprehensive_score}}）</div>
+      {{/if}}
+    </div>
+  </div>
+
+  <div class="cont">
+    <div class="stat-grid">
+      <div class="stat-cell"><span class="v">{{stats.active_day_number}}</span><span class="k">活跃天数</span></div>
+      <div class="stat-cell"><span class="v">{{stats.armor_number}}</span><span class="k">女武神</span></div>
+      <div class="stat-cell"><span class="v">{{stats.weapon_number}}</span><span class="k">武器</span></div>
+      <div class="stat-cell"><span class="v">{{stats.stigmata_number}}</span><span class="k">圣痕</span></div>
+      <div class="stat-cell"><span class="v">{{stats.suit_number}}</span><span class="k">装备套装</span></div>
+      <div class="stat-cell"><span class="v">{{stats.five_star_weapon_number}}</span><span class="k">五星武器</span></div>
+      <div class="stat-cell"><span class="v">{{stats.five_star_stigmata_number}}</span><span class="k">五星圣痕</span></div>
+      <div class="stat-cell"><span class="v">{{stats.explore_score_sum}}</span><span class="k">探索总分</span></div>
+    </div>
+
+    <div class="sub-title">玩法进度</div>
+    <div class="stat-grid">
+      <div class="stat-cell"><span class="v">Lv{{stats.new_abyss.level}}</span><span class="k">超弦空间</span></div>
+      <div class="stat-cell"><span class="v">{{stats.new_abyss.cup_number}}</span><span class="k">超弦奖杯</span></div>
+      <div class="stat-cell"><span class="v">{{stats.god_war_max_challenge_score}}</span><span class="k">乐土最高分</span></div>
+      <div class="stat-cell"><span class="v">{{stats.god_war_extra_item_number}}</span><span class="k">乐土遗器</span></div>
+    </div>
+  </div>
+</div>
+{{/block}}

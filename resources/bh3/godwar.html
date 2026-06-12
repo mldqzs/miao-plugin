@@ -1,0 +1,52 @@
+{{extend elemLayout}}
+
+{{block 'css'}}
+<link rel="stylesheet" type="text/css" href="{{_res_path}}/bh3/bh3.css?v=1.6"/>
+{{/block}}
+
+{{block 'main'}}
+<div class="bh3-cont">
+  <div class="head-box">
+    <div class="title">崩坏三 · 往世乐土</div>
+    <div class="label">UID:{{uid}}</div>
+    <div class="label">{{nickname}} · Lv.{{level}}</div>
+  </div>
+
+  <div class="cont">
+    <div class="stat-grid">
+      <div class="stat-cell"><span class="v">{{summary.max_challenge_score}}</span><span class="k">最高挑战分</span></div>
+      <div class="stat-cell"><span class="v">{{summary.max_support_point}}</span><span class="k">最高支援点</span></div>
+      <div class="stat-cell"><span class="v">{{summary.extra_item_number}}</span><span class="k">乐土遗器</span></div>
+      <div class="stat-cell"><span class="v">{{summary.avatar_numbers}}</span><span class="k">参战女武神</span></div>
+    </div>
+
+    {{if collections && collections.length}}
+    <div class="sub-title">乐土收集</div>
+    <div class="gw-collect">
+      {{each collections col}}
+      <div class="gw-col">
+        <div class="gw-col-top"><span>{{col.type}}</span><span>{{col.collected_number}}/{{col.total_number}}</span></div>
+        <div class="gw-bar"><span style="width:{{col.pct}}%"></span></div>
+      </div>
+      {{/each}}
+    </div>
+    {{/if}}
+
+    {{if avatars && avatars.length}}
+    <div class="sub-title">参战女武神</div>
+    <div class="char-list">
+      {{each avatars av}}
+      <div class="char-item">
+        <div class="item-icon star{{av.star}}">
+          <span class="img" style="background-image:url({{av.icon}})"></span>
+          <span class="lv">Lv{{av.level}}</span>
+        </div>
+        <span class="name">{{av.name}}</span>
+        <span class="gw-score">{{av.score}}分</span>
+      </div>
+      {{/each}}
+    </div>
+    {{/if}}
+  </div>
+</div>
+{{/block}}

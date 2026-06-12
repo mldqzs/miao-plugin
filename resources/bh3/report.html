@@ -1,0 +1,29 @@
+{{extend elemLayout}}
+
+{{block 'css'}}
+<link rel="stylesheet" type="text/css" href="{{_res_path}}/bh3/bh3.css?v=1.6"/>
+{{/block}}
+
+{{block 'main'}}
+<div class="bh3-cont">
+  <div class="head-box">
+    <div class="title">崩坏三 · {{title}}</div>
+    <div class="label">UID:{{uid}}</div>
+    <div class="label">{{nickname}} · Lv.{{level}}</div>
+  </div>
+
+  <div class="cont">
+    {{if cells && cells.length}}
+    <div class="stat-grid">
+      {{each cells c}}
+      <div class="stat-cell"><span class="v">{{@c.v}}</span><span class="k">{{c.k}}</span></div>
+      {{/each}}
+    </div>
+    {{/if}}
+
+    {{if empty}}
+    <div class="empty-tip">{{emptyMsg || '本期暂无详细记录'}}</div>
+    {{/if}}
+  </div>
+</div>
+{{/block}}

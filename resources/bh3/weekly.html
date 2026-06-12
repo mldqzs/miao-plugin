@@ -1,0 +1,40 @@
+{{extend elemLayout}}
+
+{{block 'css'}}
+<link rel="stylesheet" type="text/css" href="{{_res_path}}/bh3/bh3.css?v=1.6"/>
+{{/block}}
+
+{{block 'main'}}
+<div class="bh3-cont">
+  <div class="head-box">
+    <div class="title">崩坏三 · 一周成绩单</div>
+    <div class="label">UID:{{uid}}</div>
+    <div class="label">{{nickname}} · Lv.{{level}}</div>
+  </div>
+
+  <div class="cont">
+    <div class="stat-grid">
+      <div class="stat-cell"><span class="v">{{w.online_hours}}<i>h</i></span><span class="k">在线时长</span></div>
+      <div class="stat-cell"><span class="v">{{w.active_day_number}}</span><span class="k">活跃天数</span></div>
+      <div class="stat-cell"><span class="v">{{w.expended_physical_power}}</span><span class="k">消耗体力</span></div>
+      <div class="stat-cell"><span class="v">{{w.main_line_expended_physical_power_percentage}}<i>%</i></span><span class="k">主线体力占比</span></div>
+      <div class="stat-cell"><span class="v">{{w.gold_income}}</span><span class="k">金币收入</span></div>
+      <div class="stat-cell"><span class="v">{{w.gold_expenditure}}</span><span class="k">金币支出</span></div>
+    </div>
+
+    {{if fav}}
+    <div class="sub-title">本周最常出战</div>
+    <div class="char-list">
+      <div class="char-item">
+        <div class="item-icon star{{fav.star}}">
+          <span class="img" style="background-image:url({{fav.icon}})"></span>
+        </div>
+        <span class="name">{{fav.name}}</span>
+      </div>
+    </div>
+    {{else}}
+    <div class="empty-tip">本周暂无出战记录</div>
+    {{/if}}
+  </div>
+</div>
+{{/block}}

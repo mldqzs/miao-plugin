@@ -1,0 +1,31 @@
+{{extend elemLayout}}
+
+{{block 'css'}}
+<link rel="stylesheet" type="text/css" href="{{_res_path}}/bh3/bh3.css?v=1.6"/>
+{{/block}}
+
+{{block 'main'}}
+<div class="bh3-cont">
+  <div class="head-box">
+    <div class="title">崩坏三 · 水晶月历</div>
+    <div class="label">UID:{{uid}}</div>
+    <div class="label">{{nickname}} · {{d.date}}（{{d.month}}月 Lv.{{d.month_level}}）</div>
+  </div>
+
+  <div class="cont">
+    <div class="sub-title">本月</div>
+    <div class="stat-grid">
+      <div class="stat-cell"><span class="v">{{d.month_hcoin}}</span><span class="k">本月水晶</span></div>
+      <div class="stat-cell"><span class="v">{{d.month_star}}</span><span class="k">本月星石</span></div>
+      <div class="stat-cell"><span class="v">{{d.day_hcoin}}</span><span class="k">今日水晶</span></div>
+      <div class="stat-cell"><span class="v">{{d.day_star}}</span><span class="k">今日星石</span></div>
+    </div>
+
+    <div class="sub-title">上月</div>
+    <div class="stat-grid">
+      <div class="stat-cell"><span class="v">{{d.last_hcoin}}</span><span class="k">上月水晶</span></div>
+      <div class="stat-cell"><span class="v">{{d.last_star}}</span><span class="k">上月星石</span></div>
+    </div>
+  </div>
+</div>
+{{/block}}

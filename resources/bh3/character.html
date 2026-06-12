@@ -1,0 +1,44 @@
+{{extend elemLayout}}
+
+{{block 'css'}}
+<link rel="stylesheet" type="text/css" href="{{_res_path}}/bh3/bh3.css?v=1.6"/>
+{{/block}}
+
+{{block 'main'}}
+<div class="bh3-cont">
+  <div class="head-box">
+    <div class="title">崩坏三 · 女武神图鉴</div>
+    <div class="label">UID:{{uid}}</div>
+    <div class="label">{{nickname}} · Lv.{{level}} · 共 {{chars.length}} 名</div>
+  </div>
+
+  <div class="cont">
+    <div class="char-list">
+      {{each chars char}}
+      <div class="char-item">
+        <div class="item-icon star{{char.star}}">
+          <span class="img" style="background-image:url({{char.icon}})"></span>
+          {{if char.elem}}
+          <span class="elem" style="background-image:url({{char.elem}})"></span>
+          {{/if}}
+          <span class="lv">Lv{{char.level}}</span>
+        </div>
+        <span class="name">{{char.name}}</span>
+        <div class="gear">
+          {{if char.weapon}}
+          <span class="weapon rarity{{char.weapon.rarity}}">
+            <span class="g-img" style="background-image:url({{char.weapon.icon}})"></span>
+          </span>
+          {{/if}}
+          {{each char.stigmatas stig}}
+          <span class="stig rarity{{stig.rarity}}">
+            <span class="g-img" style="background-image:url({{stig.icon}})"></span>
+          </span>
+          {{/each}}
+        </div>
+      </div>
+      {{/each}}
+    </div>
+  </div>
+</div>
+{{/block}}

@@ -14,6 +14,7 @@ import Material from './Material.js'
 import Weapon from './Weapon.js'
 import User from './User.js'
 import MysApi from './MysApi.js'
+import Bh3Api from './bh3/Bh3Api.js'
 import Button from './Button.js'
 import { miaoPath } from '#miao.path'
 
@@ -45,5 +46,6 @@ export {
   Weapon,
   User,
   MysApi,
+  Bh3Api,
   Player
 }

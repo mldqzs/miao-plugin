@@ -1,0 +1,258 @@
+/* 崩坏三 通用样式 —— 对齐喵喵深色面板风格 */
+/* 喵喵默认 body/.container 为 600px，崩三内容较宽，整体撑到 720px 并让内容填满容器，避免溢出被截断 */
+body { width: 720px; }
+/* 背景沿用 #角色 同款元素背景（elemLayout 的 .elem-bg，默认 bg-hydro），此处只控宽度 */
+.container {
+  width: 720px;
+  box-sizing: border-box;
+}
+.bh3-cont {
+  width: 100%;
+  box-sizing: border-box;
+  color: #fff;
+}
+
+.bh3-cont .head-box {
+  border-radius: 15px;
+  padding: 16px 20px;
+  margin-bottom: 16px;
+  background: linear-gradient(60deg, rgba(48, 52, 64, 0.92), rgba(38, 42, 54, 0.88));
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.35);
+  border-left: 8px solid #ff5a8c;
+}
+
+.bh3-cont .head-box .title {
+  font-family: "NZBZ", "HYWH-65W", sans-serif;
+  font-size: 34px;
+  color: #fff;
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.5);
+}
+
+.bh3-cont .head-box .label {
+  display: inline-block;
+  margin: 8px 12px 0 0;
+  font-size: 17px;
+  color: #d4d8e2;
+}
+
+.bh3-cont .cont {
+  border-radius: 15px;
+  padding: 18px;
+  background: rgba(30, 33, 42, 0.85);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3);
+}
+
+/* 角色网格 —— 用 grid 固定 5 列，卡片 1fr 填满整行，右侧永不留空 */
+.bh3-cont .char-list {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 16px 12px;
+}
+
+.bh3-cont .char-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.bh3-cont .item-icon {
+  position: relative;
+  width: 100%;
+  height: 0;
+  padding-bottom: 100%; /* 正方形，兼容老内核（不依赖 aspect-ratio） */
+  border-radius: 12px;
+  overflow: hidden;
+  background: #2b2f3a;
+  border: 3px solid #8a8f9c;
+  box-sizing: border-box;
+}
+
+.bh3-cont .item-icon .img {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-size: 145%;
+  background-position: center 18%;
+  background-repeat: no-repeat;
+}
+
+.bh3-cont .item-icon .elem {
+  position: absolute;
+  top: 3px;
+  left: 3px;
+  width: 26px;
+  height: 26px;
+  background-size: contain;
+  background-repeat: no-repeat;
+  filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.6));
+}
+
+.bh3-cont .item-icon .lv {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  padding: 1px 7px;
+  font-family: "tttgbnumber", sans-serif;
+  font-size: 15px;
+  color: #fff;
+  background: rgba(0, 0, 0, 0.6);
+  border-top-left-radius: 8px;
+}
+
+.bh3-cont .char-item .name {
+  margin-top: 6px;
+  font-size: 15px;
+  color: #f0f2f6;
+  text-align: center;
+  line-height: 1.2;
+  width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* 武器 / 圣痕 小图标 */
+.bh3-cont .gear {
+  display: flex;
+  gap: 4px;
+  margin-top: 5px;
+}
+
+.bh3-cont .gear .weapon,
+.bh3-cont .gear .stig {
+  width: 26px;
+  height: 26px;
+  border-radius: 6px;
+  overflow: hidden;
+  background: #20232c;
+  border: 2px solid #8a8f9c;
+}
+
+.bh3-cont .gear .g-img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  background-size: cover;
+  background-position: center;
+}
+
+/* 品质描边色 */
+.bh3-cont .star5,
+.bh3-cont .rarity5 { border-color: #ffb13f; }
+.bh3-cont .star4,
+.bh3-cont .rarity4 { border-color: #c879ff; }
+.bh3-cont .star3,
+.bh3-cont .rarity3 { border-color: #5a9bff; }
+.bh3-cont .star2,
+.bh3-cont .rarity2 { border-color: #5fd17a; }
+.bh3-cont .star1,
+.bh3-cont .rarity1 { border-color: #8a8f9c; }
+
+/* 账号总览 头部 */
+.bh3-cont .ov-head {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  background-size: cover;
+  background-position: center;
+}
+.bh3-cont .ov-head .ov-avatar {
+  width: 88px;
+  height: 88px;
+  border-radius: 50%;
+  background-size: cover;
+  background-position: center top;
+  border: 3px solid #ff5a8c;
+  flex-shrink: 0;
+}
+.bh3-cont .ov-head .ov-info { flex: 1; }
+.bh3-cont .ov-head .ov-info .title { font-size: 30px; }
+.bh3-cont .ov-head .ov-info .label b { color: #ffb13f; font-size: 20px; }
+
+/* 统计网格 */
+.bh3-cont .sub-title {
+  margin: 16px 0 10px;
+  padding-left: 10px;
+  font-family: "HYWH-65W", sans-serif;
+  font-size: 20px;
+  color: #ff8db3;
+  border-left: 4px solid #ff5a8c;
+}
+.bh3-cont .stat-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+.bh3-cont .stat-cell {
+  width: calc(25% - 8px);
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 12px 6px;
+  border-radius: 10px;
+  background: rgba(255, 255, 255, 0.05);
+}
+.bh3-cont .stat-cell .v {
+  font-family: "tttgbnumber", sans-serif;
+  font-size: 26px;
+  color: #fff;
+}
+.bh3-cont .stat-cell .k {
+  margin-top: 4px;
+  font-size: 14px;
+  color: #aeb3c0;
+}
+
+/* 乐土收集进度条 */
+.bh3-cont .gw-collect {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+.bh3-cont .gw-col {
+  width: calc(50% - 5px);
+  box-sizing: border-box;
+  padding: 10px 12px;
+  border-radius: 10px;
+  background: rgba(255, 255, 255, 0.05);
+}
+.bh3-cont .gw-col-top {
+  display: flex;
+  justify-content: space-between;
+  font-size: 15px;
+  color: #d4d8e2;
+  margin-bottom: 6px;
+}
+.bh3-cont .gw-bar {
+  height: 8px;
+  border-radius: 4px;
+  background: rgba(0, 0, 0, 0.35);
+  overflow: hidden;
+}
+.bh3-cont .gw-bar span {
+  display: block;
+  height: 100%;
+  background: linear-gradient(90deg, #ff5a8c, #ffb13f);
+}
+.bh3-cont .char-item .gw-score {
+  margin-top: 2px;
+  font-size: 13px;
+  color: #ffb13f;
+}
+
+/* 单位后缀 / 空状态 */
+.bh3-cont .stat-cell .v i {
+  font-style: normal;
+  font-size: 15px;
+  color: #aeb3c0;
+  margin-left: 1px;
+}
+.bh3-cont .empty-tip {
+  margin: 24px 0 12px;
+  text-align: center;
+  font-size: 18px;
+  color: #8a8f9c;
+}
