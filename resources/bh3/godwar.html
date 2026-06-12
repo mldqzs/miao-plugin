@@ -1,7 +1,7 @@
 {{extend elemLayout}}
 
 {{block 'css'}}
-<link rel="stylesheet" type="text/css" href="{{_res_path}}/bh3/bh3.css?v=1.6"/>
+<link rel="stylesheet" type="text/css" href="{{_res_path}}/bh3/bh3.css?v=2.7"/>
 {{/block}}
 
 {{block 'main'}}
@@ -14,26 +14,36 @@
 
   <div class="cont">
     <div class="stat-grid">
-      <div class="stat-cell"><span class="v">{{summary.max_challenge_score}}</span><span class="k">最高挑战分</span></div>
+      <div class="stat-cell"><span class="v">{{summary.max_challenge_score}}</span><span class="k">最高积分</span></div>
+      <div class="stat-cell"><span class="v">{{summary.avatar_numbers}}</span><span class="k">参战女武神</span></div>
       <div class="stat-cell"><span class="v">{{summary.max_support_point}}</span><span class="k">最高支援点</span></div>
       <div class="stat-cell"><span class="v">{{summary.extra_item_number}}</span><span class="k">乐土遗器</span></div>
-      <div class="stat-cell"><span class="v">{{summary.avatar_numbers}}</span><span class="k">参战女武神</span></div>
     </div>
 
-    {{if collections && collections.length}}
-    <div class="sub-title">乐土收集</div>
-    <div class="gw-collect">
-      {{each collections col}}
-      <div class="gw-col">
-        <div class="gw-col-top"><span>{{col.type}}</span><span>{{col.collected_number}}/{{col.total_number}}</span></div>
-        <div class="gw-bar"><span style="width:{{col.pct}}%"></span></div>
+    {{if record}}
+    <div class="sub-title">最近战绩</div>
+    <div class="gw-record">
+      <div class="gw-rec-stat">
+        <div><b>{{record.score}}</b><span>积分</span></div>
+        <div><b>{{record.punish_level}}</b><span>惩罚等级</span></div>
+        <div><b>{{record.cost_time}}<i>s</i></b><span>用时</span></div>
       </div>
-      {{/each}}
+      <div class="gw-team">
+        {{if record.main}}
+        <div class="bf-v"><div class="bf-icon star3"><span class="bf-img" style="background-image:url({{record.main.icon}})"></span></div><span class="bf-name">{{record.main.name}}</span></div>
+        {{/if}}
+        {{each record.support s}}
+        <div class="bf-v"><div class="bf-icon"><span class="bf-img" style="background-image:url({{s.icon}})"></span></div><span class="bf-name">{{s.name}}</span></div>
+        {{/each}}
+        {{if record.elf}}
+        <div class="bf-v"><div class="bf-icon bf-elf-icon"><span class="bf-img" style="background-image:url({{record.elf}})"></span></div><span class="bf-name">精灵</span></div>
+        {{/if}}
+      </div>
     </div>
     {{/if}}
 
     {{if avatars && avatars.length}}
-    <div class="sub-title">参战女武神</div>
+    <div class="sub-title">高分女武神</div>
     <div class="char-list">
       {{each avatars av}}
       <div class="char-item">
@@ -42,7 +52,7 @@
           <span class="lv">Lv{{av.level}}</span>
         </div>
         <span class="name">{{av.name}}</span>
-        <span class="gw-score">{{av.score}}分</span>
+        <span class="gw-score">出战{{av.times}}次</span>
       </div>
       {{/each}}
     </div>

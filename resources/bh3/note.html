@@ -1,0 +1,48 @@
+{{extend elemLayout}}
+
+{{block 'css'}}
+<link rel="stylesheet" type="text/css" href="{{_res_path}}/bh3/bh3.css?v=2.7"/>
+{{/block}}
+
+{{block 'main'}}
+<div class="bh3-cont">
+  <div class="head-box">
+    <div class="title">崩坏三 · 实时便签</div>
+    <div class="label">UID:{{uid}}</div>
+    <div class="label">{{nickname}} · Lv.{{level}}</div>
+  </div>
+
+  <div class="cont">
+    <div class="note-top">
+      <div class="note-stamina">
+        <div class="ns-num"><b>{{d.current_stamina}}</b><span>/{{d.max_stamina}}</span></div>
+        <div class="ns-k">体力 · {{recover}}</div>
+      </div>
+      <div class="note-train">
+        <div class="ns-num"><b>{{d.current_train_score}}</b><span>/{{d.max_train_score}}</span></div>
+        <div class="ns-k">今日训练点数</div>
+      </div>
+    </div>
+
+    <div class="sub-title">本周进度</div>
+    <div class="note-rows">
+      <div class="note-row">
+        <span class="nr-k">超弦空间</span>
+        <span class="nr-v">{{d.ultra_endless.tier || ('段位 ' + (d.ultra_endless.group_level || 0))}} · {{d.ultra_endless.challenge_score || 0}} 分</span>
+      </div>
+      <div class="note-row">
+        <span class="nr-k">记忆战场</span>
+        <span class="nr-v">奖励 {{d.battle_field.cur_reward || 0}}/{{d.battle_field.max_reward || 0}} · SSS {{d.battle_field.cur_sss_reward || 0}}/{{d.battle_field.max_sss_reward || 0}}</span>
+      </div>
+      <div class="note-row">
+        <span class="nr-k">往世乐土</span>
+        <span class="nr-v">积分 {{d.god_war.cur_reward || 0}}/{{d.god_war.max_reward || 0}}</span>
+      </div>
+      <div class="note-row">
+        <span class="nr-k">深渊周回</span>
+        <span class="nr-v">奖励 {{d.greedy_endless.cur_reward || 0}}/{{d.greedy_endless.max_reward || 0}}</span>
+      </div>
+    </div>
+  </div>
+</div>
+{{/block}}

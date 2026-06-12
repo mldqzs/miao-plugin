@@ -138,6 +138,7 @@ export default class Bh3Api {
   getNewAbyss () { return this.record('newAbyssReport') } // 超弦空间
   getBattleField () { return this.record('battleFieldReport') } // 记忆战场
   getWeekly () { return this.record('weeklyReport') }   // 周报
+  getNote () { return this.record('note') }             // 实时便签（体力+各玩法周进度）
 
   /** 水晶/星石 财务接口（bh3-weekly_finance，host=api.mihoyo.com） */
   async finance (path, extra = '') {
@@ -153,4 +154,32 @@ export default class Bh3Api {
   getCrystal () { return this.finance('index') }                 // 本月水晶月历
   getCrystalLastMonth () { return this.finance('getLastMonthInfo') } // 上月
   getHcoinRecords () { return this.finance('getHcoinRecords', 'page=1&limit=20') } // 水晶明细
+
+  /** 实时便签（体力）多候选诊断：一次试多个接口，看哪个返回体力 */
+  async getWidget () {
+    if (!this.uid || !this.region) {
+      const roles = await this.getRoles()
+      if (!this.uid || !this.region) return roles
+    }
+    await this.getFp()
+    const q = `role_id=${this.uid}&server=${this.region}`
+    const cands = [
+      ['widget_getData', `${HOST_RECORD}/game_record/app/honkai3rd/widget/getData`, q],
+      ['aapi_widget_v2', `${HOST_RECORD}/game_record/app/honkai3rd/aapi/widget/v2`, q],
+      ['api_note', `${HOST_RECORD}/game_record/app/honkai3rd/api/note`, q],
+      ['api_basicInfo', `${HOST_RECORD}/game_record/app/honkai3rd/api/basicInfo`, q]
+    ]
+    const out = {}
+    for (const [name, url, query] of cands) {
+      const res = await this.request(url, { query }).catch(() => false)
+      out[name] = { retcode: res?.retcode, message: res?.message, data: res?.retcode === 0 ? res.data : undefined }
+    }
+    // getGameRecordCard：米游社个人页各游戏展示数据，可能含体力
+    const bbsUid = (String(this.cookie).match(/(?:account_id_v2|account_id|ltuid_v2|ltuid|stuid|login_uid)=(\d+)/) || [])[1]
+    if (bbsUid) {
+      const res = await this.request(`${HOST_RECORD}/game_record/app/card/wapi/getGameRecordCard`, { query: `uid=${bbsUid}` }).catch(() => false)
+      out.gameRecordCard = { retcode: res?.retcode, bh3: (res?.data?.list || []).find(g => g.game_id === 1) }
+    }
+    return out
+  }
 }

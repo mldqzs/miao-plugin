@@ -13,16 +13,22 @@ let app = App.init({
  */
 // 统一出图（scale 1.4）；页脚 fork & 小青 已在全局 Render.js 处理
 function bh3Render (e, tpl, params) {
-  return Common.render(tpl, params, { e, scale: 1.4 })
+  return Common.render(tpl, { path: '/tmp/bh3_render.png', ...params }, { e, scale: 1.4 })
 }
 
 async function getBh3Api (e) {
-  let mys = await MysApi.init(e, 'cookie')
-  if (!mys || !mys.ck) {
+  // 直接取查询者激活 gs 账号的 ck（与 /uid 勾选一致）；多 ck 下比 getMysInfo 的 uid 解析更稳
+  let user = e.user || e.runtime?.user
+  let ck = user?.getMysUser?.('gs')?.ck || Object.values(user?.mysUsers || {})[0]?.ck
+  if (!ck) {
+    let mys = await MysApi.init(e, 'cookie') // 兜底：旧版 runtime
+    ck = mys?.ck
+  }
+  if (!ck) {
     e.reply('请先绑定米游社Cookie（与原神共用，发送【#绑定cookie】查看教程）')
     return false
   }
-  let api = new Bh3Api(mys.ck)
+  let api = new Bh3Api(ck)
   await api.getRoles()
   if (!api.uid || !api.region) {
     e.reply('未查询到该账号下的崩坏三角色，请确认米游社战绩已公开')
@@ -75,7 +81,7 @@ function mapChars (res) {
     let a = c?.character?.avatar || {}
     return {
       name: a.name,
-      icon: a.half_length_icon_path || a.icon_path || a.image_path,
+      icon: a.sec_part_icon || a.icon_path || a.half_length_icon_path,
       level: a.level,
       star: a.star,
       elem: a.oblique_avatar_background_path,
@@ -118,6 +124,34 @@ async function bh3Note (e) {
   }, { e, scale: 1.4 })
 }
 
+// 2.3 !体力 —— 实时便签（体力 + 训练点数 + 各玩法本周进度）
+async function bh3Stamina (e) {
+  let api = await getBh3Api(e)
+  if (!api) return true
+  let res = await api.getNote()
+  if (!checkRet(e, res)) return true
+  dumpData('stamina', api.uid, res.data)
+  let d = res.data || {}
+  let t = d.stamina_recover_time || 0
+  let recover = t <= 0
+    ? '已回满'
+    : '约 ' + (t >= 3600 ? Math.floor(t / 3600) + ' 时 ' : '') + Math.floor((t % 3600) / 60) + ' 分后回满'
+  let ue = d.ultra_endless || {}
+  let ultraTier = abyssTierByIcon(ue.level_icon) || abyssTierByLevel(ue.group_level)
+  let r = api.roleInfo || {}
+  return await bh3Render(e, 'bh3/note', {
+    uid: api.uid, nickname: r.nickname || '', level: r.level || '',
+    recover,
+    d: {
+      ...d,
+      ultra_endless: { ...ue, tier: ultraTier },
+      battle_field: d.battle_field || {},
+      god_war: d.god_war || {},
+      greedy_endless: d.greedy_endless || {}
+    }
+  })
+}
+
 // 3.3 !往世乐土
 async function bh3GodWar (e) {
   let api = await getBh3Api(e)
@@ -126,26 +160,25 @@ async function bh3GodWar (e) {
   if (!checkRet(e, res)) return true
   dumpData('godWar', api.uid, res.data)
   let d = res.data || {}
-  let collections = (d.collections || []).map(c => ({
-    ...c,
-    pct: Math.min(100, Math.round((c.collected_number / (c.total_number || 1)) * 100))
-  }))
-  let avatars = (d.avatar_transcript || []).map(t => ({
-    name: t.avatar?.name,
-    icon: t.avatar?.icon_path,
-    star: t.avatar?.star,
-    level: t.level,
-    score: t.max_challenge_score
-  }))
+  let rec = (d.records || [])[0]
+  let record = rec ? {
+    score: rec.score,
+    punish_level: rec.punish_level,
+    cost_time: rec.cost_time,
+    main: rec.main_avatar ? { name: rec.main_avatar.name, icon: rec.main_avatar.sec_part_icon } : null,
+    support: (rec.support_avatars || []).map(s => ({ name: s.name, icon: s.sec_part_icon })),
+    elf: rec.elf?.avatar
+  } : null
+  let avatars = (d.avatar_transcript || [])
+    .slice()
+    .sort((a, b) => (b.max_challenge_score - a.max_challenge_score) || (b.challenge_success_times - a.challenge_success_times))
+    .slice(0, 12)
+    .map(t => ({ name: t.avatar?.name, icon: t.avatar?.sec_part_icon, star: t.avatar?.star, level: t.level, times: t.challenge_success_times }))
   let r = api.roleInfo || {}
   return await bh3Render(e, 'bh3/godwar', {
-    uid: api.uid,
-    nickname: r.nickname || '',
-    level: r.level || '',
-    summary: d.summary || {},
-    collections,
-    avatars
-  }, { e, scale: 1.4 })
+    uid: api.uid, nickname: r.nickname || '', level: r.level || '',
+    summary: d.summary || {}, record, avatars
+  })
 }
 
 // 3.4 !周报 —— 一周成绩单
@@ -168,27 +201,45 @@ async function bh3Weekly (e) {
   }, { e, scale: 1.4 })
 }
 
+// 记忆战场区名（同 qiqi-plugin levelbf）
+const BF_AREA = { 1: '初级区', 2: '中级区', 3: '高级区', 4: '终极区' }
+
 // 3.1 !记忆战场
 async function bh3Battle (e) {
   let api = await getBh3Api(e)
   if (!api) return true
-  let idx = await api.getIndex()
-  let rep = await api.getBattleField()
-  if (!checkRet(e, rep)) return true
-  dumpData('battle', api.uid, rep.data)
-  let s = idx?.data?.stats || {}
-  let cells = [
-    { k: '战场积分', v: s.battle_field_score ?? 0 },
-    { k: '战场排名', v: s.battle_field_rank ?? 0 },
-    { k: '战场区域', v: s.battle_field_area ?? 0 },
-    { k: '排名百分比', v: s.battle_field_ranking_percentage || '—' }
-  ]
-  let reports = rep.data?.reports || []
+  let res = await api.getBattleField()
+  if (!checkRet(e, res)) return true
+  dumpData('battle', api.uid, res.data)
+  let rep = (res.data?.reports || [])[0] || {}
+  let stages = (rep.battle_infos || []).map(bi => ({
+    elf: bi.elf?.avatar,
+    lineup: (bi.lineup || []).map(v => ({ name: v.name, icon: v.sec_part_icon, star: v.star }))
+  }))
   let r = api.roleInfo || {}
-  return await bh3Render(e, 'bh3/report', {
-    title: '记忆战场', uid: api.uid, nickname: r.nickname || '', level: r.level || '',
-    cells, empty: reports.length === 0, emptyMsg: '本期暂无记忆战场记录'
-  }, { e, scale: 1.4 })
+  return await bh3Render(e, 'bh3/battle', {
+    uid: api.uid, nickname: r.nickname || '', level: r.level || '',
+    score: rep.score ?? 0, rank: rep.rank ?? 0, pct: rep.ranking_percentage || '0',
+    area: BF_AREA[rep.area] || ('区' + (rep.area ?? 0)),
+    stages
+  })
+}
+
+// 超弦空间段位名（米游社五档：禁忌→原罪→苦痛→红莲→寂灭；红莲/寂灭外各分 I/II/III）
+const ABYSS_MEDAL = { 1: '禁忌', 2: '原罪', 3: '苦痛', 4: '红莲', 5: '寂灭' }
+// level_icon 形如 .../TheAbyssMedal04.png —— 奖章号即权威段位，优先用它
+function abyssTierByIcon (url) {
+  let m = /TheAbyssMedal0?(\d+)/.exec(url || '')
+  return m ? (ABYSS_MEDAL[Number(m[1])] || '') : ''
+}
+// 仅有 group_level 时的兜底映射（本号实测 8/9 = 红莲/Medal04 为锚点）
+function abyssTierByLevel (lv) {
+  lv = Number(lv) || 0
+  if (lv <= 2) return '禁忌'
+  if (lv <= 4) return '原罪'
+  if (lv <= 7) return '苦痛'
+  if (lv <= 10) return '红莲'
+  return '寂灭'
 }
 
 // 3.2 !超弦空间
@@ -196,21 +247,35 @@ async function bh3Abyss (e) {
   let api = await getBh3Api(e)
   if (!api) return true
   let idx = await api.getIndex()
-  let rep = await api.getNewAbyss()
-  if (!checkRet(e, rep)) return true
-  dumpData('newAbyss', api.uid, rep.data)
+  let note = await api.getNote().catch(() => false)
+  let res = await api.getNewAbyss()
+  if (!checkRet(e, res)) return true
+  dumpData('newAbyss', api.uid, res.data)
   let na = idx?.data?.stats?.new_abyss || {}
+  let ue = note?.data?.ultra_endless || {}
+  let tierName = abyssTierByIcon(ue.level_icon) || abyssTierByLevel(ue.group_level ?? na.level)
   let cells = [
-    { k: '当前段位', v: 'Lv' + (na.level ?? 0) },
+    { k: '超弦段位', v: tierName || ('Lv' + (ue.group_level ?? na.level ?? 0)) },
+    { k: '挑战分数', v: ue.challenge_score ?? 0 },
     { k: '奖杯数', v: na.cup_number ?? 0 }
   ]
-  let detail = rep.data || {}
-  let hasData = (detail.reports?.length || detail.records?.length || 0) > 0
+  let reports = (res.data?.reports || []).map(rp => ({
+    boss: rp.boss?.avatar,
+    bossName: rp.boss?.name,
+    score: rp.score,
+    tier: abyssTierByLevel(rp.level),
+    level: rp.level,
+    rank: rp.rank,
+    cup: rp.cup_number,
+    cupChange: rp.settled_cup_number,
+    date: rp.updated_time_second ? new Date(rp.updated_time_second * 1000).toISOString().slice(5, 10).replace('-', '.') : '',
+    lineup: (rp.lineup || []).map(v => ({ name: v.name, icon: v.sec_part_icon, star: v.star }))
+  }))
   let r = api.roleInfo || {}
-  return await bh3Render(e, 'bh3/report', {
-    title: '超弦空间', uid: api.uid, nickname: r.nickname || '', level: r.level || '',
-    cells, empty: !hasData, emptyMsg: '本期暂无超弦空间记录'
-  }, { e, scale: 1.4 })
+  return await bh3Render(e, 'bh3/abyss', {
+    uid: api.uid, nickname: r.nickname || '', level: r.level || '',
+    cells, reports
+  })
 }
 
 // 4.1 !水晶 —— 水晶月历（finance index）
@@ -254,7 +319,8 @@ async function bh3CrystalYear (e) {
 app.reg({
   bh3Character: { name: '崩三角色', desc: '查询崩坏三角色列表', rule: /^(!|！)角色$/, fn: bh3Character },
   bh3Weapon: { name: '崩三武器', desc: '查询崩坏三女武神装备', rule: /^(!|！)武器$/, fn: bh3Weapon },
-  bh3Note: { name: '崩三总览', desc: '查询崩坏三账号总览', rule: /^(!|！)(总览|体力)$/, fn: bh3Note },
+  bh3Note: { name: '崩三总览', desc: '查询崩坏三账号总览', rule: /^(!|！)总览$/, fn: bh3Note },
+  bh3Stamina: { name: '崩三体力', desc: '查询体力实时便签', rule: /^(!|！)体力$/, fn: bh3Stamina },
   bh3GodWar: { name: '崩三往世乐土', desc: '查询往世乐土数据', rule: /^(!|！)往世乐土$/, fn: bh3GodWar },
   bh3NewAbyss: { name: '崩三超弦空间', desc: '查询超弦空间数据', rule: /^(!|！)超弦空间$/, fn: bh3Abyss },
   bh3Battle: { name: '崩三记忆战场', desc: '查询记忆战场数据', rule: /^(!|！)记忆战场$/, fn: bh3Battle },

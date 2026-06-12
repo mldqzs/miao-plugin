@@ -1,0 +1,45 @@
+{{extend elemLayout}}
+
+{{block 'css'}}
+<link rel="stylesheet" type="text/css" href="{{_res_path}}/bh3/bh3.css?v=2.7"/>
+{{/block}}
+
+{{block 'main'}}
+<div class="bh3-cont">
+  <div class="head-box">
+    <div class="title">崩坏三 · 记忆战场</div>
+    <div class="label">UID:{{uid}}</div>
+    <div class="label">{{nickname}} · Lv.{{level}}</div>
+  </div>
+
+  <div class="cont">
+    <div class="stat-grid">
+      <div class="stat-cell"><span class="v">{{score}}</span><span class="k">积分</span></div>
+      <div class="stat-cell"><span class="v">{{rank}}</span><span class="k">排名</span></div>
+      <div class="stat-cell"><span class="v">{{pct}}<i>%</i></span><span class="k">超越玩家</span></div>
+      <div class="stat-cell"><span class="v">{{area}}</span><span class="k">战场区域</span></div>
+    </div>
+
+    {{if stages && stages.length}}
+    <div class="sub-title">出战阵容</div>
+    {{each stages st}}
+    <div class="bf-stage">
+      {{if st.elf}}
+      <div class="bf-elf"><span class="bf-img" style="background-image:url({{st.elf}})"></span></div>
+      {{/if}}
+      <div class="bf-lineup">
+        {{each st.lineup v}}
+        <div class="bf-v">
+          <div class="bf-icon star{{v.star}}"><span class="bf-img" style="background-image:url({{v.icon}})"></span></div>
+          <span class="bf-name">{{v.name}}</span>
+        </div>
+        {{/each}}
+      </div>
+    </div>
+    {{/each}}
+    {{else}}
+    <div class="empty-tip">本期暂无记忆战场记录</div>
+    {{/if}}
+  </div>
+</div>
+{{/block}}
