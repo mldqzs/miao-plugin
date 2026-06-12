@@ -1,7 +1,7 @@
 {{extend elemLayout}}
 
 {{block 'css'}}
-<link rel="stylesheet" type="text/css" href="{{_res_path}}/bh3/bh3.css?v=2.7"/>
+<link rel="stylesheet" type="text/css" href="{{_res_path}}/bh3/bh3.css?v=2.8"/>
 {{/block}}
 
 {{block 'main'}}
@@ -13,24 +13,31 @@
   </div>
 
   <div class="cont">
-    <div class="char-list">
+    <div class="wp-list">
       {{each chars char}}
-      <div class="char-item">
-        <div class="item-icon star{{char.star}}">
-          <span class="img" style="background-image:url({{char.icon}})"></span>
-          <span class="lv">Lv{{char.level}}</span>
+      <div class="wp-card">
+        <div class="wp-head">
+          <div class="item-icon star{{char.star}} wp-avatar">
+            <span class="img" style="background-image:url({{char.icon}})"></span>
+          </div>
+          <span class="wp-cname">{{char.name}}</span>
         </div>
-        <span class="name">{{char.name}}</span>
-        <div class="gear">
+        <div class="wp-gear">
           {{if char.weapon}}
-          <span class="weapon rarity{{char.weapon.rarity}}">
-            <span class="g-img" style="background-image:url({{char.weapon.icon}})"></span>
-          </span>
+          <div class="wp-slot">
+            <div class="wp-icon rarity{{char.weapon.rarity}}">
+              <span class="g-img" style="background-image:url({{char.weapon.icon}})"></span>
+            </div>
+            <span class="wp-glv">Lv{{char.weapon.level}}</span>
+          </div>
           {{/if}}
           {{each char.stigmatas stig}}
-          <span class="stig rarity{{stig.rarity}}">
-            <span class="g-img" style="background-image:url({{stig.icon}})"></span>
-          </span>
+          <div class="wp-slot">
+            <div class="wp-icon rarity{{stig.rarity}}">
+              <span class="g-img" style="background-image:url({{stig.icon}})"></span>
+            </div>
+            <span class="wp-glv">Lv{{stig.level}}</span>
+          </div>
           {{/each}}
         </div>
       </div>

@@ -12,6 +12,17 @@ body { width: 720px; }
   color: #fff;
 }
 
+/* 全局数据源标注 —— 所有崩三图片底部统一小字 */
+.bh3-cont::after {
+  content: "数据源 · 米游社";
+  display: block;
+  margin-top: 10px;
+  padding-right: 4px;
+  text-align: right;
+  font-size: 12px;
+  color: #7a8090;
+}
+
 .bh3-cont .head-box {
   border-radius: 15px;
   padding: 16px 20px;
@@ -441,6 +452,85 @@ body { width: 720px; }
   display: flex;
   flex-wrap: wrap;
   gap: 10px;
+}
+
+/* 女武神装备（!武器）—— 每名角色的武器 + 3 圣痕，带等级 */
+.bh3-cont .wp-list {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+}
+.bh3-cont .wp-card {
+  min-width: 0;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 12px;
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.05);
+}
+.bh3-cont .wp-head {
+  flex: 0 0 58px;
+  width: 58px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.bh3-cont .wp-avatar {
+  width: 58px;
+  padding-bottom: 58px; /* 正方形 */
+  height: 0;
+}
+.bh3-cont .wp-cname {
+  margin-top: 5px;
+  width: 100%;
+  font-size: 12px;
+  line-height: 1.2;
+  color: #f0f2f6;
+  text-align: center;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.bh3-cont .wp-gear {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  justify-content: space-between;
+  gap: 6px;
+}
+.bh3-cont .wp-slot {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.bh3-cont .wp-icon {
+  width: 100%;
+  height: 0;
+  padding-bottom: 100%; /* 正方形 */
+  position: relative;
+  border-radius: 8px;
+  overflow: hidden;
+  background: #20232c;
+  border: 2px solid #8a8f9c;
+  box-sizing: border-box;
+}
+.bh3-cont .wp-icon .g-img {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-size: cover;
+  background-position: center;
+}
+.bh3-cont .wp-glv {
+  margin-top: 4px;
+  font-family: "tttgbnumber", sans-serif;
+  font-size: 13px;
+  color: #ffd27a;
 }
 
 /* 超弦空间 段位标签 + 注释 */
