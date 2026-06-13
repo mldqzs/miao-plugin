@@ -454,6 +454,46 @@ body { width: 720px; }
   gap: 10px;
 }
 
+/* 段位升降箭头 */
+.bh3-cont .stat-cell .v .trend {
+  font-style: normal;
+  font-size: 16px;
+  margin-left: 4px;
+  vertical-align: middle;
+}
+.bh3-cont .trend.up { color: #ffb13f; }
+.bh3-cont .trend.down { color: #ff6b6b; }
+.bh3-cont .trend.flat { color: #8a8f9c; }
+
+/* 舰长偏好（各玩法投入度横条） */
+.bh3-cont .pref-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 8px 22px;
+}
+.bh3-cont .pref-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.bh3-cont .pref-k {
+  flex: 0 0 44px;
+  font-size: 15px;
+  color: #d4d8e2;
+}
+.bh3-cont .pref-row .gw-bar {
+  flex: 1;
+  min-width: 0;
+  height: 10px;
+}
+.bh3-cont .pref-v {
+  flex: 0 0 30px;
+  text-align: right;
+  font-family: "tttgbnumber", sans-serif;
+  font-size: 15px;
+  color: #ffd27a;
+}
+
 /* 女武神装备（!武器）—— 每名角色的武器 + 3 圣痕，带等级 */
 .bh3-cont .wp-list {
   display: grid;

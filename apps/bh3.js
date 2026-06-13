@@ -17,15 +17,22 @@ function bh3Render (e, tpl, params) {
 }
 
 async function getBh3Api (e) {
-  // 直接取查询者激活 gs 账号的 ck（与 /uid 勾选一致）；多 ck 下比 getMysInfo 的 uid 解析更稳
+  // 支持 @他人 查询：被 @ 时取被 @ 用户绑定的 ck，否则取查询者自己的
+  let atQQ = e.at && String(e.at) !== String(e.user_id) ? e.at : null
   let user = e.user || e.runtime?.user
+  if (atQQ) {
+    let NoteUser = e.runtime?.NoteUser
+    let atUser = NoteUser ? await NoteUser.create(atQQ).catch(() => null) : null
+    if (atUser) user = atUser
+  }
+  // 直接取（被 @）用户激活 gs 账号的 ck（与 /uid 勾选一致）；多 ck 下比 getMysInfo 的 uid 解析更稳
   let ck = user?.getMysUser?.('gs')?.ck || Object.values(user?.mysUsers || {})[0]?.ck
-  if (!ck) {
-    let mys = await MysApi.init(e, 'cookie') // 兜底：旧版 runtime
+  if (!ck && !atQQ) {
+    let mys = await MysApi.init(e, 'cookie') // 兜底：旧版 runtime（仅自查）
     ck = mys?.ck
   }
   if (!ck) {
-    e.reply('请先绑定米游社Cookie（与原神共用，发送【#绑定cookie】查看教程）')
+    e.reply(atQQ ? 'TA还没有绑定米游社Cookie' : '请先绑定米游社Cookie（与原神共用，发送【#绑定cookie】查看教程）')
     return false
   }
   let api = new Bh3Api(ck)
@@ -35,6 +42,23 @@ async function getBh3Api (e) {
     return false
   }
   return api
+}
+
+// 区服代码 → 名称：pc=全平台桌面服；安卓/iOS 保留接口原叫法；其余未知代码统称渠道服
+function bh3RegionName (api) {
+  let code = api?.region || ''
+  if (!code) return ''
+  if (/^pc/i.test(code)) return '全平台桌面服'
+  if (/^android/i.test(code)) return api?.roleInfo?.region_name || '安卓国服'
+  if (/^ios/i.test(code)) return api?.roleInfo?.region_name || 'iOS国服'
+  return '渠道服'
+}
+
+// 段位升降 → 箭头标记（delta>0 升 / <0 降 / =0 保）
+function trendMark (delta) {
+  if (delta > 0) return { cls: 'up', sym: '▲', txt: '升级' }
+  if (delta < 0) return { cls: 'down', sym: '▼', txt: '降级' }
+  return { cls: 'flat', sym: '—', txt: '保级' }
 }
 
 /** 统一校验接口返回 */
@@ -113,13 +137,42 @@ async function bh3Note (e) {
   if (!api) return true
   let res = await api.getIndex()
   if (!checkRet(e, res)) return true
+  // 升降需对比战报，与总览并发拉取（失败不影响总览主体）
+  let [abRes, bfRes] = await Promise.all([
+    api.getNewAbyss().catch(() => false),
+    api.getBattleField().catch(() => false)
+  ])
   dumpData('note', api.uid, res.data)
+  dumpData('roles', api.uid, api.roleInfo)
   let d = res.data || {}
+  let st = d.stats || {}
+  let na = st.new_abyss || {}
+  let pf = d.preference || {}
+  // 超弦空间升降：最近一期战报内 结算段位 vs 出战段位
+  let abReps = abRes?.data?.reports || []
+  let abyssTrend = abReps[0] ? trendMark((abReps[0].settled_level || 0) - (abReps[0].level || 0)) : null
+  // 记忆战场升降：最近两期 区域(area)对比
+  let bfReps = bfRes?.data?.reports || []
+  let bfTrend = bfReps.length >= 2 ? trendMark((bfReps[0].area || 0) - (bfReps[1].area || 0)) : null
+  // 舰长偏好（各玩法投入度 0-100）
+  let prefList = [
+    { k: '深渊', v: pf.abyss },
+    { k: '战场', v: pf.battle_field },
+    { k: '乐土', v: pf.god_war },
+    { k: '主线', v: pf.main_line },
+    { k: '大世界', v: pf.open_world },
+    { k: '社区', v: pf.community }
+  ].filter(x => x.v != null)
   return await bh3Render(e, 'bh3/index', {
     uid: api.uid,
-    role: d.role || {},
-    stats: { new_abyss: {}, ...(d.stats || {}) },
-    preference: d.preference || {},
+    role: { ...(d.role || {}), region: bh3RegionName(api) },
+    stats: { new_abyss: {}, ...st },
+    abyssTier: abyssTierByLevel(na.level),
+    bfArea: BF_AREA[st.battle_field_area] || (st.battle_field_area != null ? '区' + st.battle_field_area : '-'),
+    abyssTrend,
+    bfTrend,
+    preference: pf,
+    prefList,
     bg: d.head_background
   }, { e, scale: 1.4 })
 }

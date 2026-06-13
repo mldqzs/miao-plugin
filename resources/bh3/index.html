@@ -30,13 +30,30 @@
       <div class="stat-cell"><span class="v">{{stats.explore_score_sum}}</span><span class="k">探索总分</span></div>
     </div>
 
-    <div class="sub-title">玩法进度</div>
+    <div class="sub-title">段位概况</div>
     <div class="stat-grid">
-      <div class="stat-cell"><span class="v">Lv{{stats.new_abyss.level}}</span><span class="k">超弦空间</span></div>
+      <div class="stat-cell"><span class="v">{{abyssTier || ('Lv' + stats.new_abyss.level)}}{{if abyssTrend}}<em class="trend {{abyssTrend.cls}}">{{abyssTrend.sym}}</em>{{/if}}</span><span class="k">超弦空间{{if abyssTrend}} · {{abyssTrend.txt}}{{/if}}</span></div>
+      <div class="stat-cell"><span class="v">{{stats.abyss_score}}</span><span class="k">超弦分数</span></div>
       <div class="stat-cell"><span class="v">{{stats.new_abyss.cup_number}}</span><span class="k">超弦奖杯</span></div>
+      <div class="stat-cell"><span class="v">{{bfArea}}{{if bfTrend}}<em class="trend {{bfTrend.cls}}">{{bfTrend.sym}}</em>{{/if}}</span><span class="k">记忆战场{{if bfTrend}} · {{bfTrend.txt}}{{/if}}</span></div>
+      <div class="stat-cell"><span class="v">第{{stats.battle_field_rank}}名</span><span class="k">战场排名</span></div>
+      <div class="stat-cell"><span class="v">{{stats.battle_field_ranking_percentage}}<i>%</i></span><span class="k">战场超越</span></div>
       <div class="stat-cell"><span class="v">{{stats.god_war_max_challenge_score}}</span><span class="k">乐土最高分</span></div>
       <div class="stat-cell"><span class="v">{{stats.god_war_extra_item_number}}</span><span class="k">乐土遗器</span></div>
     </div>
+
+    {{if prefList && prefList.length}}
+    <div class="sub-title">舰长偏好{{if preference.comprehensive_rating}} · 综合 {{preference.comprehensive_rating}}（{{preference.comprehensive_score}}）{{/if}}</div>
+    <div class="pref-grid">
+      {{each prefList p}}
+      <div class="pref-row">
+        <span class="pref-k">{{p.k}}</span>
+        <div class="gw-bar"><span style="width:{{p.v}}%"></span></div>
+        <span class="pref-v">{{p.v}}</span>
+      </div>
+      {{/each}}
+    </div>
+    {{/if}}
   </div>
 </div>
 {{/block}}

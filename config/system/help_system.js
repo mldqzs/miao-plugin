@@ -173,6 +173,33 @@ export const helpList = [{
     desc: '其他命令'
   }]
 }, {
+  group: '崩坏三（! 前缀，CK 与原神共用，可 @ 他人查询）',
+  list: [{
+    icon: 61,
+    title: '!角色 !武器',
+    desc: '女武神图鉴 / 装备（武器圣痕）'
+  }, {
+    icon: 63,
+    title: '!总览 !体力',
+    desc: '账号总览 / 实时便签体力'
+  }, {
+    icon: 64,
+    title: '!超弦空间 !记忆战场',
+    desc: '深渊战报 / 战场阵容'
+  }, {
+    icon: 65,
+    title: '!往世乐土 !周报',
+    desc: '往世乐土 / 一周成绩单'
+  }, {
+    icon: 86,
+    title: '!水晶 !今年水晶统计',
+    desc: '水晶月历 / 收支统计'
+  }, {
+    icon: 85,
+    title: '!uid !删除ck',
+    desc: '崩三UID查询 / 解绑'
+  }]
+}, {
   group: '管理命令，仅管理员可用',
   auth: 'master',
   list: [{
