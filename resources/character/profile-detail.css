@@ -83,8 +83,8 @@ body {
   text-shadow: 0 0 3px #000, 2px 2px 4px rgba(0, 0, 0, 0.7);
   text-align: right;
 }
-/* UID：多色彩虹 + 微光，呼应角色名 */
-.char-uid {
+/* UID 整行(UID + 号码 + 等级)：横向多色彩虹，呼应角色名；命座徽章在 .char-lv-text 外，不受影响 */
+.char-lv-text {
   font-weight: bold;
   letter-spacing: 1px;
   /* 必须清掉继承自 .char-lv 的 text-shadow，否则会破坏 background-clip:text 导致发黑 */
