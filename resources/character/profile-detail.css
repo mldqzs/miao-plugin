@@ -78,16 +78,17 @@ body {
     drop-shadow(0 0 10px rgba(255, 90, 160, 0.55))
     drop-shadow(0 0 18px rgba(80, 180, 255, 0.45));
 }
+/* UID 整行(UID + 号码 + 等级)：横向多色彩虹，呼应角色名。
+   纯 CSS 作用于 .char-lv，不依赖 HTML 结构 → 原版 miao 与 ark 替换版模板通用。
+   - width:fit-content + margin-left:auto：收缩到文字宽并右对齐，让渐变正好铺满整段文字(否则铺满整行只显示一截彩虹)。
+   - text-shadow 必须为 none，否则破坏 background-clip:text 导致发黑(改用 filter:drop-shadow 出辉光)。 */
 .char-lv {
   margin-bottom: 20px;
-  text-shadow: 0 0 3px #000, 2px 2px 4px rgba(0, 0, 0, 0.7);
   text-align: right;
-}
-/* UID 整行(UID + 号码 + 等级)：横向多色彩虹，呼应角色名；命座徽章在 .char-lv-text 外，不受影响 */
-.char-lv-text {
+  width: fit-content;
+  margin-left: auto;
   font-weight: bold;
   letter-spacing: 1px;
-  /* 必须清掉继承自 .char-lv 的 text-shadow，否则会破坏 background-clip:text 导致发黑 */
   text-shadow: none;
   background-image: linear-gradient(
     90deg,
@@ -107,13 +108,15 @@ body {
   filter: drop-shadow(0 1px 1px rgba(0, 0, 0, 0.7))
     drop-shadow(0 0 6px rgba(120, 180, 255, 0.55));
 }
+/* 命座徽章在彩虹行内：恢复白字(撤销继承的透明填充)，保留自身底色与描边发光 */
 .char-lv .cons {
   margin-left: 5px;
   vertical-align: bottom;
-  /* 命之座徽章：描边 + 彩光，更醒目 */
+  -webkit-text-fill-color: #fff;
+  color: #fff;
+  text-shadow: 0 1px 1px rgba(0, 0, 0, 0.6);
   box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.35),
     0 0 8px rgba(255, 200, 120, 0.7);
-  text-shadow: 0 1px 1px rgba(0, 0, 0, 0.6);
 }
 .char-attr {
   backdrop-filter: blur(2px);
