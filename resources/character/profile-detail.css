@@ -53,17 +53,67 @@ body {
 .char-name {
   font-size: 50px;
   font-family: Number, "印品南征北战NZBZ体", NZBZ, "汉仪文黑-65W", YS, PingFangSC-Medium, "PingFang SC", sans-serif;
-  text-shadow: 0 0 3px #000, 2px 2px 4px rgba(0, 0, 0, 0.7);
+  font-size: 54px;
   text-align: right;
+  letter-spacing: 2px;
+  /* 角色名：高饱和斜向彩虹 + 描边 + 多色霓虹光晕 */
+  background-image: linear-gradient(
+    115deg,
+    #ff2d55 0%,
+    #ff7a18 14%,
+    #ffd000 30%,
+    #2bff88 48%,
+    #00e0ff 64%,
+    #4f7bff 80%,
+    #c724ff 100%
+  );
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  color: transparent;
+  -webkit-text-stroke: 0.6px rgba(0, 0, 0, 0.35);
+  /* 跟随字形的黑色立体投影 + 彩色霓虹辉光，亮色立绘上依旧醒目 */
+  filter: drop-shadow(0 0 1px rgba(0, 0, 0, 0.85))
+    drop-shadow(2px 3px 3px rgba(0, 0, 0, 0.7))
+    drop-shadow(0 0 10px rgba(255, 90, 160, 0.55))
+    drop-shadow(0 0 18px rgba(80, 180, 255, 0.45));
 }
 .char-lv {
   margin-bottom: 20px;
   text-shadow: 0 0 3px #000, 2px 2px 4px rgba(0, 0, 0, 0.7);
   text-align: right;
 }
+/* UID：多色彩虹 + 微光，呼应角色名 */
+.char-uid {
+  font-weight: bold;
+  letter-spacing: 1px;
+  /* 必须清掉继承自 .char-lv 的 text-shadow，否则会破坏 background-clip:text 导致发黑 */
+  text-shadow: none;
+  background-image: linear-gradient(
+    90deg,
+    #ff2d55,
+    #ff7a18,
+    #ffd000,
+    #2bff88,
+    #00e0ff,
+    #4f7bff,
+    #c724ff,
+    #ff2d9c
+  );
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  color: transparent;
+  filter: drop-shadow(0 1px 1px rgba(0, 0, 0, 0.7))
+    drop-shadow(0 0 6px rgba(120, 180, 255, 0.55));
+}
 .char-lv .cons {
   margin-left: 5px;
   vertical-align: bottom;
+  /* 命之座徽章：描边 + 彩光，更醒目 */
+  box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.35),
+    0 0 8px rgba(255, 200, 120, 0.7);
+  text-shadow: 0 1px 1px rgba(0, 0, 0, 0.6);
 }
 .char-attr {
   backdrop-filter: blur(2px);
@@ -335,8 +385,20 @@ body {
   display: none;
 }
 .cont-title {
-  background: rgba(0, 0, 0, 0.4);
-  color: #d3bc8e;
+  /* 见出しバー：彩色斜向流光 + 左侧霓虹竖条 + 发光金字 */
+  background: linear-gradient(
+    100deg,
+    rgba(199, 36, 255, 0.55) 0%,
+    rgba(79, 123, 255, 0.45) 25%,
+    rgba(0, 0, 0, 0.5) 55%,
+    rgba(0, 0, 0, 0.45) 100%
+  );
+  border-left: 4px solid #ffd000;
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.08),
+    0 0 8px rgba(120, 90, 255, 0.35);
+  color: #ffe9b0;
+  text-shadow: 0 0 6px rgba(255, 210, 90, 0.65), 0 1px 1px rgba(0, 0, 0, 0.8);
+  letter-spacing: 1px;
   padding: 10px 20px;
   text-align: left;
 }
@@ -360,10 +422,18 @@ body {
   display: table-row;
 }
 .dmg-cont .tr:nth-child(even) {
-  background: rgba(0, 0, 0, 0.4);
+  background: linear-gradient(
+    100deg,
+    rgba(120, 80, 200, 0.22) 0%,
+    rgba(0, 0, 0, 0.42) 60%
+  );
 }
 .dmg-cont .tr:nth-child(odd) {
-  background: rgba(50, 50, 50, 0.4);
+  background: linear-gradient(
+    100deg,
+    rgba(60, 130, 220, 0.2) 0%,
+    rgba(40, 40, 50, 0.42) 60%
+  );
 }
 .dmg-cont .tr > div {
   display: table-cell;
@@ -380,8 +450,14 @@ body {
   text-align: center;
 }
 .dmg-cont .tr.thead > div {
-  color: #d3bc8e;
-  background: rgba(0, 0, 0, 0.4);
+  color: #fff0c2;
+  background: linear-gradient(
+    180deg,
+    rgba(79, 123, 255, 0.35) 0%,
+    rgba(0, 0, 0, 0.55) 100%
+  );
+  text-shadow: 0 0 6px rgba(255, 210, 90, 0.6);
+  letter-spacing: 1px;
   height: 40px;
   font-size: 15px;
 }
@@ -420,12 +496,56 @@ body {
 }
 .dmg .value {
   text-align: center;
-  color: #fff;
   display: block;
   height: 40px;
   font-size: 18px;
   line-height: 40px;
   width: 32%;
+  font-weight: bold;
+  /* 伤害数值：纵向金属流光金，与角色名的横向彩虹色相/方向均不同，互不冲突 */
+  background-image: linear-gradient(
+    to bottom,
+    #fff7da 0%,
+    #ffe39a 42%,
+    #f6c552 68%,
+    #e0a230 100%
+  );
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  color: transparent;
+  /* 金属金 + 暖金霓虹辉光，让大数字更夺目（value-full 单值列沿用此金色）*/
+  filter: drop-shadow(0 1px 1px rgba(0, 0, 0, 0.6))
+    drop-shadow(0 0 7px rgba(255, 190, 70, 0.55));
+}
+/* 暴击伤害列（第3格）：炽焰金红 */
+.dmg .value:nth-child(3) {
+  background-image: linear-gradient(
+    to bottom,
+    #fff0d6 0%,
+    #ffd06a 38%,
+    #ff8a3d 70%,
+    #ff5436 100%
+  );
+  filter: drop-shadow(0 1px 1px rgba(0, 0, 0, 0.6))
+    drop-shadow(0 0 8px rgba(255, 110, 50, 0.6));
+}
+/* 期望伤害列（第4格）：冷蓝青，与暴击列冷暖对撞 */
+.dmg .value:nth-child(4) {
+  background-image: linear-gradient(
+    to bottom,
+    #eafdff 0%,
+    #a4ecff 38%,
+    #46c6ff 70%,
+    #2a9bff 100%
+  );
+  filter: drop-shadow(0 1px 1px rgba(0, 0, 0, 0.6))
+    drop-shadow(0 0 8px rgba(60, 180, 255, 0.6));
+}
+/* 伤害类型名（如「爆发伤害」）：保留单元格底色，仅提亮文字并加阴影，与数值金、名字虹呼应而不抢戏 */
+.dmg-cont .dmg .dmg-title {
+  color: #f3e0b5;
+  text-shadow: 0 1px 1px rgba(0, 0, 0, 0.6);
 }
 .dmg-notice {
   font-size: 12px;
@@ -492,20 +612,79 @@ body {
 .artis .head span {
   font-size: 14px;
 }
+/* 圣遗物评级：按档位焕彩分级，越高越炫 */
+.mark-ACE,
+.mark-MAX,
+.mark-SSS,
+.mark-SS,
+.mark-S,
+.mark-A,
+.mark-B,
+.mark-C,
+.mark-D,
+.mark-ACE span,
+.mark-MAX span,
+.mark-SSS span,
+.mark-SS span,
+.mark-S span,
+.mark-A span,
+.mark-B span,
+.mark-C span,
+.mark-D span {
+  font-weight: bold;
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  color: transparent;
+  /* 清掉继承自 .head 的 text-shadow，否则渐变裁切失效、评分发黑 */
+  text-shadow: none;
+}
+/* 顶级：全息虹光 */
 .mark-ACE,
 .mark-MAX {
-  color: #e85656;
-  font-weight: bold;
+  background-image: linear-gradient(
+    115deg,
+    #ff2d55,
+    #ff7a18,
+    #ffd000,
+    #2bff88,
+    #00e0ff,
+    #c724ff
+  );
+  filter: drop-shadow(0 1px 1px rgba(0, 0, 0, 0.6))
+    drop-shadow(0 0 7px rgba(255, 120, 200, 0.65));
 }
+/* 高档：璀璨流光金 */
 .mark-SSS,
 .mark-SS {
-  color: #ffe699;
-  font-weight: bold;
+  background-image: linear-gradient(to right, #fff3c4, #ffd76a, #f3a93a);
+  filter: drop-shadow(0 1px 1px rgba(0, 0, 0, 0.6))
+    drop-shadow(0 0 6px rgba(255, 200, 90, 0.6));
 }
+/* 中高档：紫晶 */
 .mark-S,
 .mark-A {
-  color: #d699ff;
-  font-weight: bold;
+  background-image: linear-gradient(to right, #f0d6ff, #d699ff, #9d6bff);
+  filter: drop-shadow(0 1px 1px rgba(0, 0, 0, 0.6))
+    drop-shadow(0 0 6px rgba(190, 120, 255, 0.55));
+}
+/* 中档：青蓝 */
+.mark-B {
+  background-image: linear-gradient(to right, #d6f6ff, #7fdcff, #3aa9f3);
+  filter: drop-shadow(0 1px 1px rgba(0, 0, 0, 0.6))
+    drop-shadow(0 0 5px rgba(90, 190, 255, 0.5));
+}
+/* 中低档：翠绿，依旧鲜亮不发灰 */
+.mark-C {
+  background-image: linear-gradient(to right, #d6ffe4, #6fe3a0, #25c46b);
+  filter: drop-shadow(0 1px 1px rgba(0, 0, 0, 0.6))
+    drop-shadow(0 0 5px rgba(70, 215, 140, 0.5));
+}
+/* 低档：青绿，色相再偏冷一点以区分档位 */
+.mark-D {
+  background-image: linear-gradient(to right, #d2fff5, #74e6d4, #21b3a6);
+  filter: drop-shadow(0 1px 1px rgba(0, 0, 0, 0.6))
+    drop-shadow(0 0 5px rgba(60, 200, 185, 0.5));
 }
 .arti-main {
   color: #fff;
@@ -666,6 +845,15 @@ body {
 .artis .weapon .head strong {
   font-size: 15px;
   margin-bottom: 3px;
+  /* 武器名：暖金渐变 + 微光 */
+  background-image: linear-gradient(to right, #fff3d0, #ffd479, #f3b44a);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  color: transparent;
+  text-shadow: none;
+  filter: drop-shadow(0 1px 1px rgba(0, 0, 0, 0.7))
+    drop-shadow(0 0 5px rgba(255, 190, 90, 0.5));
 }
 .artis .weapon .head > span {
   display: block;

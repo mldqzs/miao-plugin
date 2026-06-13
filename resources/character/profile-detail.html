@@ -17,7 +17,7 @@
     <div class="main-pic" style="background-image:url({{_res_path}}{{costumeSplash||imgs?.splash}})"></div>
     <div class="detail">
       <div class="char-name">{{data.name}}</div>
-      <div class="char-lv">UID {{uid}} - Lv.{{data.level}}
+      <div class="char-lv">UID <span class="char-uid">{{uid}}</span> - Lv.{{data.level}}
         <span class="cons cons-{{data.cons}}">{{data.cons}}命</span></div>
       <div>
         {{if mode !== 'weapon'}}
