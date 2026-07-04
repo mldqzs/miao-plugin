@@ -20,6 +20,9 @@ export default {
 
   async response (data, req) {
     if (!data.playerInfo) {
+      if (data.error === 'empty') {
+        return req.err('empty', 5 * 60)
+      }
       if (data.error) {
         console.log(`AQing ReqErr: ${data.error}`)
       }

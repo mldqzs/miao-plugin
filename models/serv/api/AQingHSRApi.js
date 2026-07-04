@@ -20,6 +20,9 @@ export default {
 
   async response (data, req) {
     if (!data.detailInfo) {
+      if (data.error === 'empty') {
+        return req.err('empty', 5 * 60)
+      }
       return req.err('error', 60)
     }
     let ds = data.detailInfo
