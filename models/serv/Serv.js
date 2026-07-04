@@ -4,6 +4,8 @@ let { diyCfg } = await Data.importCfg('profile')
 import ProfileServ from './ProfileServ.js'
 import ProfileReq from './ProfileReq.js'
 
+import aqingApi from './api/AQingApi.js'
+import aqingHSRApi from './api/AQingHSRApi.js'
 import enkaApi from './api/EnkaApi.js'
 import miaoApi from './api/MiaoApi.js'
 import mggApi from './api/MggApi.js'
@@ -15,6 +17,8 @@ import mysPanelApi from './api/MysPanelApi.js'
 import mysPanelHSRApi from './api/MysPanelHSRApi.js'
 
 const apis = {
+  aqing: aqingApi,
+  aqingHSR: aqingHSRApi,
   miao: miaoApi,
   mgg: mggApi,
   enka: enkaApi,
@@ -56,23 +60,25 @@ const Serv = {
     }
 
     // 如果指定了序号，则返回对应服务。0和1已前置判断
-    // 原神：0自动，1喵，2Enka，3Mgg，4:Hutao，5:米游社
-    // 星铁：0自动，1喵，2Mihomo，3Avocado，4EnkaHSR，5:米游社
+    // 原神：0自动，1喵，2Enka，3MiniGG，4Hutao，5米游社，6AQing
+    // 星铁：0自动，1喵，2Mihomo，3Avocado，4EnkaHSR，5米游社，6AQingHSR
     let servKey = isGs ? {
       2: 'enka',
       3: 'mgg',
       4: 'hutao',
+      6: 'aqing'
     } : {
       2: 'homo',
       3: 'avocado',
       4: 'enkaHSR',
+      6: 'aqingHSR'
     }
     if (servKey[servIdx]) {
       return Serv.serv(servKey[servIdx])
     }
 
     // 设置为0或无token，使用返回默认的serv。官服0 B服1 国际2
-    let defServKey = isGs ? ['mgg', 'mgg', 'enka'] : ['homo', 'homo', 'homo']
+    let defServKey = isGs ? ['aqing', 'aqing', 'enka'] : ['aqingHSR', 'aqingHSR', 'aqingHSR']
     return Serv.serv(defServKey[servType])
   },
 

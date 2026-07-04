@@ -4,6 +4,22 @@
  * */
 
 /**
+ * AQing 面板反代服务配置（Enka 兼容返回格式）
+ *
+ * 适合自建缓存/多上游 fallback 反代。token 会作为 X-AQing-Token 请求头发送。
+ * 如机器人和反代不在同一台服务器，请把 url 改为你的 HTTPS 域名。
+ * */
+export const aqingApi = {
+  url: 'http://127.0.0.1:31731/',
+  token: ''
+}
+
+export const aqingHSRApi = {
+  url: 'http://127.0.0.1:31731/',
+  token: ''
+}
+
+/**
  * Enka面板服务API配置
  *
  * 【Enka官网】：https://enka.network/

@@ -3,6 +3,15 @@
 * 如需自定义配置请复制修改上一级profile_default.js
 * */
 
+export const aqingApi = {
+  url: 'http://127.0.0.1:31731/',
+  userAgent: 'Miao-Plugin/3.1',
+  token: '',
+  listApi: ({ url, uid, diyCfg }) => {
+    return `${url}api/uid/${uid}`
+  }
+}
+
 export const miaoApi = {
   listApi: ({ url, uid, diyCfg, game = 'gs' }) => {
     let qq = /\d{5,12}/.test(diyCfg.qq) ? diyCfg.qq : 'none'
@@ -57,6 +66,15 @@ export const avocadoApi = {
   userAgent: 'Miao-Plugin/3.1',
   listApi: ({ url, uid, diyCfg }) => {
     return `${url}/${uid}`
+  }
+}
+
+export const aqingHSRApi = {
+  url: 'http://127.0.0.1:31731/',
+  userAgent: 'Miao-Plugin/3.1',
+  token: '',
+  listApi: ({ url, uid, diyCfg }) => {
+    return `${url}sr_info/${uid}`
   }
 }
 

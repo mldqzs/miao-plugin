@@ -69,6 +69,7 @@ export default class Avatar extends Base {
   get dataSource () {
     return {
       enka: 'Enka.Network',
+      aqing: 'AQing-Api',
       miao: '喵喵Api',
       mgg: 'MiniGG-Api',
       hutao: 'Hutao-Enka',

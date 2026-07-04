@@ -102,16 +102,16 @@ export const cfgSchema = {
         key: '面板服务',
         def: '0',
         type: 'str',
-        input: (n) => /[0-4]{1,3}/.test(n) ? n : '0',
-        desc: '面板服务选择：0:自动，1:喵Api(需具备Token)，2:Enka-API，3:MiniGG-Api，4:Hutao-Enka代理。如设置三位数字则为分服务器设置，按顺序分别为 国服/B服/外服，例如112代表国服B服Miao,国外Enka'
+        input: (n) => /[0-6]{1,3}/.test(n) ? n : '0',
+        desc: '面板服务选择：0:自动，1:喵Api(需具备Token)，2:Enka-API，3:MiniGG-Api，4:Hutao-Enka代理，5:米游社，6:AQing-Api。如设置三位数字则为分服务器设置，按顺序分别为 国服/B服/外服，例如662代表国服B服AQing,国外Enka'
       },
       srProfileServer: {
         title: '星铁面板服务',
         key: '星铁面板服务',
         def: '0',
         type: 'str',
-        input: (n) => /[0-4]{1,3}/.test(n) ? n : '0',
-        desc: '星铁面板服务选择：0:自动，1:喵Api(需具备Token)，2:Mihomo，3:Avocado(鳄梨)，4:EnkaHSR。如设置三位数字则为分服务器设置，按顺序分别为 国服/B服/外服，例如114代表国服B服Miao,国外Enka'
+        input: (n) => /[0-6]{1,3}/.test(n) ? n : '0',
+        desc: '星铁面板服务选择：0:自动，1:喵Api(需具备Token)，2:Mihomo，3:Avocado(鳄梨)，4:EnkaHSR，5:米游社，6:AQing-Api。如设置三位数字则为分服务器设置，按顺序分别为 国服/B服/外服，例如666代表全部AQing'
       },
       costumeSplash: {
         title: '使用自定义面板插图',
