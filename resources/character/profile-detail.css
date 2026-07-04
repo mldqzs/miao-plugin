@@ -7,10 +7,14 @@
 body {
   width: 600px;
 }
-.container {
+.container.elem-bg {
   width: 600px;
   padding: 0;
-  background-size: cover;
+  background-image: linear-gradient(180deg, rgba(18, 22, 32, 0.18), rgba(18, 22, 32, 0.46)), url("https://www.loliapi.com/acg/pc/"), url("../character-img/default/01.jpg");
+  background-color: #1d2332;
+  background-size: 100% auto;
+  background-repeat: repeat-y;
+  background-position: top center;
   overflow: hidden;
 }
 .profile-cont {
@@ -119,10 +123,12 @@ body {
     0 0 8px rgba(255, 200, 120, 0.7);
 }
 .char-attr {
-  backdrop-filter: blur(2px);
-  background: rgba(0, 0, 0, 0.2);
-  border-radius: 8px;
+  backdrop-filter: blur(3px);
+  background: rgba(12, 16, 24, 0.24);
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  border-radius: 10px;
   overflow: hidden;
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.12);
 }
 .char-attr li {
   width: 300px;
@@ -365,12 +371,12 @@ body {
 }
 /***  dmg ***/
 .cont {
-  border-radius: 10px;
-  background: url("../common/cont/card-bg.png") top left repeat-x;
-  background-size: auto 100%;
-  margin: 5px 0;
+  border-radius: 14px;
+  background: linear-gradient(135deg, rgba(24, 28, 38, 0.42), rgba(44, 35, 58, 0.30));
+  backdrop-filter: blur(3px);
+  margin: 7px 0;
   position: relative;
-  box-shadow: 0 0 1px 0 #ccc, 2px 2px 4px 0 rgba(50, 50, 50, 0.8);
+  box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.12), 0 8px 18px rgba(0, 0, 0, 0.16);
   overflow: hidden;
   color: #fff;
   font-size: 16px;
