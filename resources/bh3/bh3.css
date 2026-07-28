@@ -1,10 +1,18 @@
 /* 崩坏三 通用样式 —— 对齐喵喵深色面板风格 */
 /* 喵喵默认 body/.container 为 600px，崩三内容较宽，整体撑到 720px 并让内容填满容器，避免溢出被截断 */
 body { width: 720px; }
-/* 背景沿用 #角色 同款元素背景（elemLayout 的 .elem-bg，默认 bg-hydro），此处只控宽度 */
-.container {
+/* 背景对齐原神面板：loliapi 随机图 + 本地兜底，叠一层深色渐变保证文字可读 */
+.container,
+.container.elem-bg {
   width: 720px;
   box-sizing: border-box;
+  background-image: linear-gradient(180deg, rgba(18, 22, 32, 0.22), rgba(18, 22, 32, 0.55)),
+    url("https://www.loliapi.com/acg/pc/"),
+    url("../character-img/default/01.jpg");
+  background-color: #1d2332;
+  background-size: 100% auto;
+  background-repeat: repeat-y;
+  background-position: top center;
 }
 .bh3-cont {
   width: 100%;
@@ -24,12 +32,28 @@ body { width: 720px; }
 }
 
 .bh3-cont .head-box {
-  border-radius: 15px;
-  padding: 16px 20px;
+  border-radius: 18px;
+  padding: 18px 22px;
   margin-bottom: 16px;
-  background: linear-gradient(60deg, rgba(48, 52, 64, 0.92), rgba(38, 42, 54, 0.88));
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.35);
+  background:
+    linear-gradient(115deg, rgba(255, 90, 140, 0.22), transparent 42%),
+    linear-gradient(60deg, rgba(36, 40, 54, 0.92), rgba(28, 32, 44, 0.88));
+  box-shadow: 0 6px 22px rgba(0, 0, 0, 0.38);
+  border: 1px solid rgba(255, 255, 255, 0.08);
   border-left: 8px solid #ff5a8c;
+  position: relative;
+  overflow: hidden;
+}
+.bh3-cont .head-box::after {
+  content: "";
+  position: absolute;
+  right: -40px;
+  top: -50px;
+  width: 160px;
+  height: 160px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(255, 177, 63, 0.28), transparent 70%);
+  pointer-events: none;
 }
 
 .bh3-cont .head-box .title {
@@ -37,6 +61,8 @@ body { width: 720px; }
   font-size: 34px;
   color: #fff;
   text-shadow: 0 1px 3px rgba(0, 0, 0, 0.5);
+  position: relative;
+  z-index: 1;
 }
 
 .bh3-cont .head-box .label {
@@ -44,20 +70,51 @@ body { width: 720px; }
   margin: 8px 12px 0 0;
   font-size: 17px;
   color: #d4d8e2;
+  position: relative;
+  z-index: 1;
+}
+
+/* 品阶统计条（!角色 / !武器 头部） */
+.bh3-cont .rank-bar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 12px;
+  position: relative;
+  z-index: 1;
+}
+.bh3-cont .rank-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 3px 10px;
+  border-radius: 999px;
+  font-size: 13px;
+  font-family: "HYWH-65W", sans-serif;
+  color: #fff;
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+}
+.bh3-cont .rank-pill b {
+  font-family: "tttgbnumber", sans-serif;
+  font-size: 15px;
+  font-weight: normal;
 }
 
 .bh3-cont .cont {
-  border-radius: 15px;
+  border-radius: 18px;
   padding: 18px;
-  background: rgba(30, 33, 42, 0.85);
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3);
+  background: rgba(22, 26, 36, 0.78);
+  box-shadow: 0 6px 22px rgba(0, 0, 0, 0.32);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  backdrop-filter: blur(2px);
 }
 
 /* 角色网格 —— 用 grid 固定 5 列，卡片 1fr 填满整行，右侧永不留空 */
 .bh3-cont .char-list {
   display: grid;
-  grid-template-columns: repeat(6, minmax(0, 1fr)); /* minmax(0,..) 强制等宽，避免长名字撑大某列 */
-  gap: 14px 10px;
+  grid-template-columns: repeat(5, minmax(0, 1fr)); /* minmax(0,..) 强制等宽，避免长名字撑大某列 */
+  gap: 14px 12px;
 }
 
 .bh3-cont .char-item {
@@ -65,6 +122,15 @@ body { width: 720px; }
   display: flex;
   flex-direction: column;
   align-items: center;
+  padding: 8px 6px 10px;
+  border-radius: 14px;
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.07), rgba(255, 255, 255, 0.03));
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.18);
+}
+.bh3-cont .char-item.is-chosen {
+  border-color: rgba(255, 177, 63, 0.55);
+  box-shadow: 0 0 0 1px rgba(255, 177, 63, 0.25), 0 4px 14px rgba(255, 177, 63, 0.18);
 }
 
 .bh3-cont .item-icon {
@@ -74,7 +140,7 @@ body { width: 720px; }
   padding-bottom: 100%; /* 正方形，兼容老内核（不依赖 aspect-ratio） */
   border-radius: 14px; /* 圆角方块（白底头肩特写，统一规格） */
   overflow: hidden;
-  background: #eceff5;
+  background: #1a1e28;
   border: 3px solid #8a8f9c;
   box-sizing: border-box;
 }
@@ -90,15 +156,27 @@ body { width: 720px; }
   background-repeat: no-repeat;
 }
 
-.bh3-cont .item-icon .elem {
+/* 属性小图标默认不展示（原先左上角色块来源）；需要时可再开 */
+.bh3-cont .item-icon .elem { display: none; }
+
+/* 女武神品阶徽章 SS / SSS 等 —— 放左上角，盖住原属性色块位置 */
+.bh3-cont .rank-badge {
   position: absolute;
-  top: 3px;
-  left: 3px;
-  width: 26px;
-  height: 26px;
-  background-size: contain;
-  background-repeat: no-repeat;
-  filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.6));
+  top: 4px;
+  left: 4px;
+  right: auto;
+  min-width: 28px;
+  padding: 1px 6px;
+  font-family: "tttgbnumber", "HYWH-65W", sans-serif;
+  font-size: 12px;
+  line-height: 18px;
+  text-align: center;
+  color: #fff;
+  border-radius: 8px;
+  background: rgba(0, 0, 0, 0.55);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  z-index: 3;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.35);
 }
 
 .bh3-cont .item-icon .lv {
@@ -112,11 +190,12 @@ body { width: 720px; }
   background: rgba(0, 0, 0, 0.62);
   border-top-left-radius: 8px;
   white-space: nowrap;
+  z-index: 2;
 }
 
 .bh3-cont .char-item .name {
-  margin-top: 6px;
-  font-size: 15px;
+  margin-top: 7px;
+  font-size: 14px;
   color: #f0f2f6;
   text-align: center;
   line-height: 1.2;
@@ -138,8 +217,8 @@ body { width: 720px; }
 
 .bh3-cont .gear .weapon,
 .bh3-cont .gear .stig {
-  width: 21px;
-  height: 21px;
+  width: 22px;
+  height: 22px;
   flex: 0 0 auto;
   border-radius: 5px;
   overflow: hidden;
@@ -155,17 +234,51 @@ body { width: 720px; }
   background-position: center;
 }
 
-/* 品质描边色 */
+/* 品质描边色 + 品阶色（B/A/S/SS/SSS） */
 .bh3-cont .star5,
-.bh3-cont .rarity5 { border-color: #ffb13f; }
+.bh3-cont .rarity5 { border-color: #ffb13f; box-shadow: 0 0 10px rgba(255, 177, 63, 0.35); }
 .bh3-cont .star4,
-.bh3-cont .rarity4 { border-color: #c879ff; }
+.bh3-cont .rarity4 { border-color: #c879ff; box-shadow: 0 0 8px rgba(200, 121, 255, 0.28); }
 .bh3-cont .star3,
 .bh3-cont .rarity3 { border-color: #5a9bff; }
 .bh3-cont .star2,
 .bh3-cont .rarity2 { border-color: #5fd17a; }
 .bh3-cont .star1,
 .bh3-cont .rarity1 { border-color: #8a8f9c; }
+
+/* 品阶色板：徽章 / 统计 pill 共用 */
+.bh3-cont .rank-SSS,
+.bh3-cont .rank-badge.rank-SSS,
+.bh3-cont .rank-pill.rank-SSS {
+  background: linear-gradient(135deg, #ff7a18, #ffd000);
+  border-color: rgba(255, 208, 0, 0.55);
+  color: #1a1200;
+  text-shadow: none;
+}
+.bh3-cont .rank-SS,
+.bh3-cont .rank-badge.rank-SS,
+.bh3-cont .rank-pill.rank-SS {
+  background: linear-gradient(135deg, #b44dff, #ff5a8c);
+  border-color: rgba(255, 90, 140, 0.45);
+}
+.bh3-cont .rank-S,
+.bh3-cont .rank-badge.rank-S,
+.bh3-cont .rank-pill.rank-S {
+  background: linear-gradient(135deg, #3d7bff, #6ec8ff);
+  border-color: rgba(110, 200, 255, 0.45);
+}
+.bh3-cont .rank-A,
+.bh3-cont .rank-badge.rank-A,
+.bh3-cont .rank-pill.rank-A {
+  background: linear-gradient(135deg, #2bb673, #5fd17a);
+  border-color: rgba(95, 209, 122, 0.4);
+}
+.bh3-cont .rank-B,
+.bh3-cont .rank-badge.rank-B,
+.bh3-cont .rank-pill.rank-B {
+  background: linear-gradient(135deg, #6b7280, #9aa3b2);
+  border-color: rgba(154, 163, 178, 0.4);
+}
 
 /* 账号总览 头部 */
 .bh3-cont .ov-head {
@@ -191,11 +304,12 @@ body { width: 720px; }
 /* 统计网格 */
 .bh3-cont .sub-title {
   margin: 16px 0 10px;
-  padding-left: 10px;
+  padding-left: 12px;
   font-family: "HYWH-65W", sans-serif;
   font-size: 20px;
   color: #ff8db3;
   border-left: 4px solid #ff5a8c;
+  letter-spacing: 1px;
 }
 .bh3-cont .stat-grid {
   display: flex;
@@ -208,14 +322,17 @@ body { width: 720px; }
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding: 12px 6px;
-  border-radius: 10px;
-  background: rgba(255, 255, 255, 0.05);
+  padding: 14px 6px 12px;
+  border-radius: 12px;
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.08), rgba(255, 255, 255, 0.03));
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.04);
 }
 .bh3-cont .stat-cell .v {
   font-family: "tttgbnumber", sans-serif;
   font-size: 26px;
   color: #fff;
+  text-shadow: 0 1px 6px rgba(255, 90, 140, 0.25);
 }
 .bh3-cont .stat-cell .k {
   margin-top: 4px;
@@ -279,21 +396,33 @@ body { width: 720px; }
   display: flex;
   align-items: flex-start;
   gap: 14px;
-  padding: 12px 14px;
+  padding: 14px 16px;
   margin-bottom: 10px;
-  border-radius: 12px;
-  background: rgba(255, 255, 255, 0.05);
+  border-radius: 14px;
+  background: linear-gradient(100deg, rgba(255, 90, 140, 0.06), rgba(255, 255, 255, 0.04));
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.15);
 }
 .bh3-cont .bf-elf,
 .bh3-cont .bf-icon {
+  position: relative;
   width: 56px;
   height: 56px;
   border-radius: 12px;
   overflow: hidden;
-  background: #eceff5;
+  background: #1a1e28;
   border: 2px solid #8a8f9c;
   box-sizing: border-box;
   flex: 0 0 auto;
+}
+.bh3-cont .bf-icon .rank-badge {
+  top: 2px;
+  right: 2px;
+  min-width: 20px;
+  padding: 0 4px;
+  font-size: 10px;
+  line-height: 14px;
+  border-radius: 5px;
 }
 .bh3-cont .bf-elf,
 .bh3-cont .bf-elf-icon {
@@ -505,13 +634,15 @@ body { width: 720px; }
   display: flex;
   align-items: center;
   gap: 12px;
-  padding: 10px 12px;
-  border-radius: 12px;
-  background: rgba(255, 255, 255, 0.05);
+  padding: 12px 14px;
+  border-radius: 14px;
+  background: linear-gradient(100deg, rgba(255, 255, 255, 0.07), rgba(255, 255, 255, 0.03));
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.15);
 }
 .bh3-cont .wp-head {
-  flex: 0 0 58px;
-  width: 58px;
+  flex: 0 0 64px;
+  width: 64px;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -531,6 +662,16 @@ body { width: 720px; }
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
+}
+.bh3-cont .wp-rank {
+  margin-top: 3px;
+  padding: 0 6px;
+  font-family: "tttgbnumber", "HYWH-65W", sans-serif;
+  font-size: 11px;
+  line-height: 16px;
+  color: #fff;
+  border-radius: 6px;
+  border: 1px solid rgba(255, 255, 255, 0.15);
 }
 .bh3-cont .wp-gear {
   flex: 1;
@@ -586,4 +727,43 @@ body { width: 720px; }
   margin: -2px 0 8px;
   font-size: 13px;
   color: #aeb3c0;
+}
+
+/* 超弦空间 / 深渊 概览与战报卡片微调 */
+.bh3-cont .ab-stat .stat-cell {
+  width: calc(33.33% - 7px);
+  background: linear-gradient(180deg, rgba(255, 90, 140, 0.14), rgba(255, 255, 255, 0.04));
+  border: 1px solid rgba(255, 90, 140, 0.22);
+}
+.bh3-cont .ab-card {
+  background: linear-gradient(100deg, rgba(255, 90, 140, 0.12), rgba(90, 155, 255, 0.06) 55%, rgba(255, 255, 255, 0.03));
+  border: 1px solid rgba(255, 90, 140, 0.16);
+}
+.bh3-cont .ab-boss {
+  width: 68px;
+  height: 68px;
+  border-color: #ff5a8c;
+  box-shadow: 0 0 14px rgba(255, 90, 140, 0.4);
+}
+.bh3-cont .ab-head {
+  margin-bottom: 6px;
+}
+.bh3-cont .ab-score {
+  margin-left: auto;
+  font-size: 20px;
+  color: #ffd27a;
+  text-shadow: 0 1px 8px rgba(255, 177, 63, 0.35);
+}
+.bh3-cont .ab-tier {
+  box-shadow: 0 2px 8px rgba(255, 90, 140, 0.3);
+}
+
+/* 便签 / 乐土 卡片稍提亮 */
+.bh3-cont .note-stamina,
+.bh3-cont .note-train,
+.bh3-cont .note-row,
+.bh3-cont .gw-record,
+.bh3-cont .gw-col {
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.12);
 }

@@ -184,8 +184,8 @@ export const helpList = [{
     desc: '账号总览 / 实时便签体力'
   }, {
     icon: 64,
-    title: '!超弦空间 !记忆战场',
-    desc: '深渊战报 / 战场阵容'
+    title: '!超弦空间 !深渊 !记忆战场',
+    desc: '超弦空间战报 / 战场阵容'
   }, {
     icon: 65,
     title: '!往世乐土 !周报',

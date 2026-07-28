@@ -1,7 +1,7 @@
 {{extend elemLayout}}
 
 {{block 'css'}}
-<link rel="stylesheet" type="text/css" href="{{_res_path}}/bh3/bh3.css?v=2.8"/>
+<link rel="stylesheet" type="text/css" href="{{_res_path}}/bh3/bh3.css?v=3.0"/>
 {{/block}}
 
 {{block 'main'}}
@@ -10,6 +10,13 @@
     <div class="title">崩坏三 · 女武神装备</div>
     <div class="label">UID:{{uid}}</div>
     <div class="label">{{nickname}} · Lv.{{level}} · 共 {{chars.length}} 名</div>
+    {{if ranks && ranks.length}}
+    <div class="rank-bar">
+      {{each ranks r}}
+      <span class="rank-pill rank-{{r.rank}}">{{r.rank}} <b>{{r.n}}</b></span>
+      {{/each}}
+    </div>
+    {{/if}}
   </div>
 
   <div class="cont">
@@ -19,8 +26,12 @@
         <div class="wp-head">
           <div class="item-icon star{{char.star}} wp-avatar">
             <span class="img" style="background-image:url({{char.icon}})"></span>
+            {{if char.rank}}
+            <span class="rank-badge rank-{{char.rank}}">{{char.rank}}</span>
+            {{/if}}
           </div>
           <span class="wp-cname">{{char.name}}</span>
+          {{if char.rank}}<span class="wp-rank rank-{{char.rank}}">{{char.rank}}</span>{{/if}}
         </div>
         <div class="wp-gear">
           {{if char.weapon}}

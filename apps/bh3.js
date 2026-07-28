@@ -91,28 +91,51 @@ async function bh3Character (e) {
   if (!checkRet(e, res)) return true
   dumpData('character', api.uid, res.data)
   let r = api.roleInfo || {}
+  let chars = mapChars(res)
   return await bh3Render(e, 'bh3/character', {
     uid: api.uid,
     nickname: r.nickname || '',
     level: r.level || '',
-    chars: mapChars(res)
-  }, { e, scale: 1.4 })
+    chars,
+    ranks: rankStats(chars)
+  })
+}
+
+// 女武神品阶：接口 star 1~5 → B/A/S/SS/SSS（可升阶后的当前品阶）
+const STAR_RANK = { 1: 'B', 2: 'A', 3: 'S', 4: 'SS', 5: 'SSS' }
+function starRank (star) {
+  return STAR_RANK[Number(star)] || ''
 }
 
 // 角色数据 → 模板 chars 数组（!角色 与 !武器 共用）
+// 按品阶降序、同阶按等级降序，方便一眼看到高阶女武神
 function mapChars (res) {
   return (res.data?.characters || []).map(c => {
     let a = c?.character?.avatar || {}
+    let star = Number(a.star) || 0
     return {
       name: a.name,
       icon: a.sec_part_icon || a.icon_path || a.half_length_icon_path,
       level: a.level,
-      star: a.star,
+      star,
+      rank: starRank(star),
       elem: a.oblique_avatar_background_path,
+      attrBg: a.attribute_background_path || a.avatar_background_path_v2 || '',
+      chosen: !!c?.is_chosen,
       weapon: c?.character?.weapon,
       stigmatas: c?.character?.stigmatas || []
     }
-  })
+  }).sort((a, b) => (b.star - a.star) || ((b.level || 0) - (a.level || 0)))
+}
+
+/** 品阶统计条（!角色 头部展示） */
+function rankStats (chars) {
+  let cnt = {}
+  for (let c of chars || []) {
+    if (!c.rank) continue
+    cnt[c.rank] = (cnt[c.rank] || 0) + 1
+  }
+  return ['SSS', 'SS', 'S', 'A', 'B'].filter(r => cnt[r]).map(r => ({ rank: r, n: cnt[r] }))
 }
 
 // 2.2 !武器 —— 女武神装备（崩三无武器背包接口，展示各女武神已装备武器+圣痕）
@@ -123,12 +146,14 @@ async function bh3Weapon (e) {
   if (!checkRet(e, res)) return true
   dumpData('weapon', api.uid, res.data)
   let r = api.roleInfo || {}
+  let chars = mapChars(res)
   return await bh3Render(e, 'bh3/weapon', {
     uid: api.uid,
     nickname: r.nickname || '',
     level: r.level || '',
-    chars: mapChars(res)
-  }, { e, scale: 1.4 })
+    chars,
+    ranks: rankStats(chars)
+  })
 }
 
 // 2.3 !体力 —— 账号总览（崩三战绩无实时体力字段，index 返回账号总览）
@@ -322,7 +347,7 @@ async function bh3Abyss (e) {
     cup: rp.cup_number,
     cupChange: rp.settled_cup_number,
     date: rp.updated_time_second ? new Date(rp.updated_time_second * 1000).toISOString().slice(5, 10).replace('-', '.') : '',
-    lineup: (rp.lineup || []).map(v => ({ name: v.name, icon: v.sec_part_icon, star: v.star }))
+    lineup: (rp.lineup || []).map(v => ({ name: v.name, icon: v.sec_part_icon, star: v.star, rank: starRank(v.star) }))
   }))
   let r = api.roleInfo || {}
   return await bh3Render(e, 'bh3/abyss', {
@@ -375,7 +400,7 @@ app.reg({
   bh3Note: { name: '崩三总览', desc: '查询崩坏三账号总览', rule: /^(!|！)总览$/, fn: bh3Note },
   bh3Stamina: { name: '崩三体力', desc: '查询体力实时便签', rule: /^(!|！)体力$/, fn: bh3Stamina },
   bh3GodWar: { name: '崩三往世乐土', desc: '查询往世乐土数据', rule: /^(!|！)往世乐土$/, fn: bh3GodWar },
-  bh3NewAbyss: { name: '崩三超弦空间', desc: '查询超弦空间数据', rule: /^(!|！)超弦空间$/, fn: bh3Abyss },
+  bh3NewAbyss: { name: '崩三超弦空间', desc: '查询超弦空间数据', rule: /^(!|！)(超弦空间|深渊)$/, fn: bh3Abyss },
   bh3Battle: { name: '崩三记忆战场', desc: '查询记忆战场数据', rule: /^(!|！)记忆战场$/, fn: bh3Battle },
   bh3Weekly: { name: '崩三周报', desc: '一周成绩单查询', rule: /^(!|！)周报$/, fn: bh3Weekly },
   bh3Crystal: { name: '崩三水晶', desc: '查看水晶月历数据', rule: /^(!|！)水晶$/, fn: bh3Crystal },
