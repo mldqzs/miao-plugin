@@ -192,7 +192,7 @@ async function bh3Note (e) {
     uid: api.uid,
     role: { ...(d.role || {}), region: bh3RegionName(api) },
     stats: { new_abyss: {}, ...st },
-    abyssTier: abyssTierByLevel(na.level),
+    abyssTier: resolveAbyssTier({ medalLevel: na.level }),
     bfArea: BF_AREA[st.battle_field_area] || (st.battle_field_area != null ? '区' + st.battle_field_area : '-'),
     abyssTrend,
     bfTrend,
@@ -215,7 +215,7 @@ async function bh3Stamina (e) {
     ? '已回满'
     : '约 ' + (t >= 3600 ? Math.floor(t / 3600) + ' 时 ' : '') + Math.floor((t % 3600) / 60) + ' 分后回满'
   let ue = d.ultra_endless || {}
-  let ultraTier = abyssTierByIcon(ue.level_icon) || abyssTierByLevel(ue.group_level)
+  let ultraTier = resolveAbyssTier({ icon: ue.level_icon, groupLevel: ue.group_level })
   let r = api.roleInfo || {}
   return await bh3Render(e, 'bh3/note', {
     uid: api.uid, nickname: r.nickname || '', level: r.level || '',
@@ -303,21 +303,62 @@ async function bh3Battle (e) {
   })
 }
 
-// 超弦空间段位名（米游社五档：禁忌→原罪→苦痛→红莲→寂灭；红莲/寂灭外各分 I/II/III）
+// 超弦空间段位
+// - index.stats.new_abyss.level / level_icon 奖章号：大段位 1-5
+// - note.ultra_endless.group_level / 战报 level：细档（含 I/II/III）
 const ABYSS_MEDAL = { 1: '禁忌', 2: '原罪', 3: '苦痛', 4: '红莲', 5: '寂灭' }
-// level_icon 形如 .../TheAbyssMedal04.png —— 奖章号即权威段位，优先用它
+const ABYSS_ROMAN = ['', 'I', 'II', 'III']
+
+function abyssTierByMedal (lv) {
+  // 大段位 1-5；米游社常显示为「原罪I」等，默认补 I（红莲/寂灭外也有细分）
+  let name = ABYSS_MEDAL[Number(lv)] || ''
+  if (!name) return ''
+  if (name === '寂灭') return name
+  return name + 'I'
+}
+
+// level_icon 形如 .../TheAbyssMedal04.png —— 奖章号即权威大段位
 function abyssTierByIcon (url) {
   let m = /TheAbyssMedal0?(\d+)/.exec(url || '')
-  return m ? (ABYSS_MEDAL[Number(m[1])] || '') : ''
+  return m ? abyssTierByMedal(m[1]) : ''
 }
-// 仅有 group_level 时的兜底映射（本号实测 8/9 = 红莲/Medal04 为锚点）
+
+// group_level 细档映射（锚点：group_level 8/9 ≈ 红莲/Medal04）
+// 禁忌1-2 / 原罪3-4 / 苦痛5-7 / 红莲8-10 / 寂灭11+
 function abyssTierByLevel (lv) {
   lv = Number(lv) || 0
-  if (lv <= 2) return '禁忌'
-  if (lv <= 4) return '原罪'
-  if (lv <= 7) return '苦痛'
-  if (lv <= 10) return '红莲'
-  return '寂灭'
+  if (lv <= 0) return ''
+  let name
+  let idx // 1-based sub-rank within band
+  if (lv <= 2) {
+    name = '禁忌'
+    idx = lv
+  } else if (lv <= 4) {
+    name = '原罪'
+    idx = lv - 2
+  } else if (lv <= 7) {
+    name = '苦痛'
+    idx = lv - 4
+  } else if (lv <= 10) {
+    name = '红莲'
+    idx = lv - 7
+  } else {
+    return '寂灭'
+  }
+  return name + (ABYSS_ROMAN[idx] || '')
+}
+
+/**
+ * 统一解析超弦段位名
+ * @param {{ icon?: string, groupLevel?: number, medalLevel?: number }} p
+ * 优先：细档 group_level（带 I/II/III）> 奖章 icon > 大段位 medal(1-5)
+ */
+function resolveAbyssTier (p = {}) {
+  let { icon, groupLevel, medalLevel } = p
+  if (groupLevel != null && groupLevel !== '' && Number(groupLevel) > 0) {
+    return abyssTierByLevel(groupLevel)
+  }
+  return abyssTierByIcon(icon) || abyssTierByMedal(medalLevel) || ''
 }
 
 // 3.2 !超弦空间
@@ -329,9 +370,15 @@ async function bh3Abyss (e) {
   let res = await api.getNewAbyss()
   if (!checkRet(e, res)) return true
   dumpData('newAbyss', api.uid, res.data)
+  if (note?.data) dumpData('stamina', api.uid, note.data)
   let na = idx?.data?.stats?.new_abyss || {}
   let ue = note?.data?.ultra_endless || {}
-  let tierName = abyssTierByIcon(ue.level_icon) || abyssTierByLevel(ue.group_level ?? na.level)
+  // note.group_level 为细档；index.new_abyss.level 仅为大段位 1-5，不可走细档映射
+  let tierName = resolveAbyssTier({
+    icon: ue.level_icon,
+    groupLevel: ue.group_level,
+    medalLevel: na.level
+  })
   let cells = [
     { k: '超弦段位', v: tierName || ('Lv' + (ue.group_level ?? na.level ?? 0)) },
     { k: '挑战分数', v: ue.challenge_score ?? 0 },
@@ -341,7 +388,8 @@ async function bh3Abyss (e) {
     boss: rp.boss?.avatar,
     bossName: rp.boss?.name,
     score: rp.score,
-    tier: abyssTierByLevel(rp.level),
+    // 战报 level 为细档；同时兼容误传 1-5 大段位
+    tier: abyssTierByLevel(rp.level) || abyssTierByMedal(rp.level),
     level: rp.level,
     rank: rp.rank,
     cup: rp.cup_number,
