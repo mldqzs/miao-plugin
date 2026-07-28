@@ -304,17 +304,18 @@ async function bh3Battle (e) {
 }
 
 // 超弦空间段位
-// - index.stats.new_abyss.level / level_icon 奖章号：大段位 1-5
-// - note.ultra_endless.group_level / 战报 level：细档（含 I/II/III）
+// 细档 group_level / 战报 level（本号锚点：2=原罪Ⅰ，8=红莲）：
+//   1 禁忌 | 2-4 原罪Ⅰ/Ⅱ/Ⅲ | 5-7 苦痛Ⅰ/Ⅱ/Ⅲ | 8 红莲 | 9+ 寂灭
+// 大段位 medal（index.new_abyss.level / TheAbyssMedal0N，仅 1-5）：
+//   1 禁忌 | 2 原罪 | 3 苦痛 | 4 红莲 | 5 寂灭
 const ABYSS_MEDAL = { 1: '禁忌', 2: '原罪', 3: '苦痛', 4: '红莲', 5: '寂灭' }
-const ABYSS_ROMAN = ['', 'I', 'II', 'III']
+const ABYSS_ROMAN = ['', 'Ⅰ', 'Ⅱ', 'Ⅲ'] // 米游社规范罗马数字
 
 function abyssTierByMedal (lv) {
-  // 大段位 1-5；米游社常显示为「原罪I」等，默认补 I（红莲/寂灭外也有细分）
-  let name = ABYSS_MEDAL[Number(lv)] || ''
-  if (!name) return ''
-  if (name === '寂灭') return name
-  return name + 'I'
+  lv = Number(lv) || 0
+  // 仅 1-5 是大段位；>5 说明实际是细档，交给 abyssTierByLevel
+  if (lv >= 1 && lv <= 5) return ABYSS_MEDAL[lv]
+  return ''
 }
 
 // level_icon 形如 .../TheAbyssMedal04.png —— 奖章号即权威大段位
@@ -323,42 +324,34 @@ function abyssTierByIcon (url) {
   return m ? abyssTierByMedal(m[1]) : ''
 }
 
-// group_level 细档映射（锚点：group_level 8/9 ≈ 红莲/Medal04）
-// 禁忌1-2 / 原罪3-4 / 苦痛5-7 / 红莲8-10 / 寂灭11+
+// 细档 level → 段位名（原罪/苦痛分 Ⅰ/Ⅱ/Ⅲ，红莲·寂灭无小分）
 function abyssTierByLevel (lv) {
   lv = Number(lv) || 0
   if (lv <= 0) return ''
-  let name
-  let idx // 1-based sub-rank within band
-  if (lv <= 2) {
-    name = '禁忌'
-    idx = lv
-  } else if (lv <= 4) {
-    name = '原罪'
-    idx = lv - 2
-  } else if (lv <= 7) {
-    name = '苦痛'
-    idx = lv - 4
-  } else if (lv <= 10) {
-    name = '红莲'
-    idx = lv - 7
-  } else {
-    return '寂灭'
-  }
-  return name + (ABYSS_ROMAN[idx] || '')
+  if (lv === 1) return '禁忌'
+  if (lv <= 4) return '原罪' + ABYSS_ROMAN[lv - 1] // 2/3/4 → 原罪Ⅰ/Ⅱ/Ⅲ
+  if (lv <= 7) return '苦痛' + ABYSS_ROMAN[lv - 4] // 5/6/7 → 苦痛Ⅰ/Ⅱ/Ⅲ
+  if (lv === 8) return '红莲'
+  return '寂灭' // 9+
 }
 
 /**
  * 统一解析超弦段位名
  * @param {{ icon?: string, groupLevel?: number, medalLevel?: number }} p
- * 优先：细档 group_level（带 I/II/III）> 奖章 icon > 大段位 medal(1-5)
+ * 优先：细档 group_level > 奖章 icon > 大段位 medal(1-5)
+ * medalLevel>5 时按细档解析，避免红莲等显示成 Lv8
  */
 function resolveAbyssTier (p = {}) {
   let { icon, groupLevel, medalLevel } = p
-  if (groupLevel != null && groupLevel !== '' && Number(groupLevel) > 0) {
-    return abyssTierByLevel(groupLevel)
-  }
-  return abyssTierByIcon(icon) || abyssTierByMedal(medalLevel) || ''
+  let gl = groupLevel != null && groupLevel !== '' ? Number(groupLevel) : 0
+  if (gl > 0) return abyssTierByLevel(gl)
+
+  let byIcon = abyssTierByIcon(icon)
+  if (byIcon) return byIcon
+
+  let ml = medalLevel != null && medalLevel !== '' ? Number(medalLevel) : 0
+  if (ml > 5) return abyssTierByLevel(ml) // 接口偶发直接给细档
+  return abyssTierByMedal(ml) || ''
 }
 
 // 3.2 !超弦空间
