@@ -633,30 +633,30 @@ body { width: 720px; }
   min-width: 0;
   display: flex;
   align-items: center;
-  gap: 12px;
-  padding: 12px 14px;
+  gap: 10px;
+  padding: 10px 12px;
   border-radius: 14px;
   background: linear-gradient(100deg, rgba(255, 255, 255, 0.07), rgba(255, 255, 255, 0.03));
   border: 1px solid rgba(255, 255, 255, 0.06);
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.15);
 }
 .bh3-cont .wp-head {
-  flex: 0 0 64px;
-  width: 64px;
+  flex: 0 0 58px;
+  width: 58px;
   display: flex;
   flex-direction: column;
   align-items: center;
 }
 .bh3-cont .wp-avatar {
-  width: 58px;
-  padding-bottom: 58px; /* 正方形 */
+  width: 54px;
+  padding-bottom: 54px; /* 正方形 */
   height: 0;
 }
 .bh3-cont .wp-cname {
-  margin-top: 5px;
+  margin-top: 3px;
   width: 100%;
-  font-size: 12px;
-  line-height: 1.2;
+  font-size: 11px;
+  line-height: 1.15;
   color: #f0f2f6;
   text-align: center;
   overflow: hidden;
@@ -664,11 +664,11 @@ body { width: 720px; }
   white-space: nowrap;
 }
 .bh3-cont .wp-rank {
-  margin-top: 3px;
-  padding: 0 6px;
+  margin-top: 2px;
+  padding: 0 5px;
   font-family: "tttgbnumber", "HYWH-65W", sans-serif;
-  font-size: 11px;
-  line-height: 16px;
+  font-size: 10px;
+  line-height: 15px;
   color: #fff;
   border-radius: 6px;
   border: 1px solid rgba(255, 255, 255, 0.15);
@@ -678,7 +678,7 @@ body { width: 720px; }
   min-width: 0;
   display: flex;
   justify-content: space-between;
-  gap: 6px;
+  gap: 5px;
 }
 .bh3-cont .wp-slot {
   flex: 1;
@@ -708,9 +708,9 @@ body { width: 720px; }
   background-position: center;
 }
 .bh3-cont .wp-glv {
-  margin-top: 4px;
+  margin-top: 3px;
   font-family: "tttgbnumber", sans-serif;
-  font-size: 13px;
+  font-size: 12px;
   color: #ffd27a;
 }
 
