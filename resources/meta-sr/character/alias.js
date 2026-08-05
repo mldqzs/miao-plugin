@@ -97,6 +97,8 @@ export const alias = {
   '姬子•启行': 'himekonova,姬子SP,SP姬子,姬子sp,sp姬子,姬子·启行,姬子•启行,姬子启行,启行姬子',
   远坂凛: 'tohsakarin,凛,红色恶魔',
   吉尔伽美什: 'gilgamesh,金闪闪,闪闪,路灯王,‌金皮卡‌,英雄王‌',
+  '知更鸟•晴歌': 'robinsummeretto,知更鸟晴歌,晴歌知更鸟,知更鸟SP,SP知更鸟,知更鸟sp,sp知更鸟,夏日知更鸟,晴歌,夏日鸟,泳装知更鸟',
+  '砂金•戏浪': 'aventurinewaveflair,砂金戏浪,戏浪砂金,砂金SP,SP砂金,砂金sp,sp砂金,夏日砂金,戏浪,泳装砂金',
 }
 
 export const abbr = {
