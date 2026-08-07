@@ -32,6 +32,12 @@ export default function (staticIdx, keyIdx) {
     欢愉满溢祝福: [
       staticIdx(1, 'atkPct')
     ],
+    向浪花掷下盛夏: [
+      staticIdx(1, 'cpct'),
+      keyIdx('施放欢愉技后速度提高[speedPct]%，不同欢愉技额外使欢愉度提高[joy]%', {
+        speedPct: 2, joy: 3
+      })
+    ],
     欢迎来到银河城: [
       staticIdx(1, 'speedPct'),
       keyIdx('造成的欢愉伤害无视目标[xeIgnore]%的防御力。装备者对自身单体施放终结技时，获得[punchline]点【笑点】', {

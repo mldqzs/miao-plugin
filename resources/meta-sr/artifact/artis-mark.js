@@ -40,6 +40,8 @@ export const usefulAttr = {
   流萤Pro: { hp: 10, atk: 100, def: 0, speed: 100, cpct: 0, cdmg: 0, stance: 100, heal: 0, recharge: 0, effPct: 0, effDef: 30, dmg: 0 },
   波提欧: { hp: 50, atk: 50, def: 50, speed: 100, cpct: 50, cdmg: 50, stance: 100, heal: 0, recharge: 50, effPct: 0, effDef: 0, dmg: 50 },
   知更鸟: { hp: 75, atk: 100, def: 75, speed: 100, cpct: 0, cdmg: 0, stance: 0, heal: 0, recharge: 100, effPct: 0, effDef: 50, dmg: 0 },
+  '知更鸟•晴歌': { hp: 100, atk: 0, def: 0, speed: 100, cpct: 70, cdmg: 70, stance: 0, heal: 0, recharge: 100, effPct: 0, effDef: 30, dmg: 80 },
+  '砂金•戏浪': { hp: 0, atk: 100, def: 0, speed: 100, cpct: 90, cdmg: 100, stance: 0, heal: 0, recharge: 0, effPct: 0, effDef: 0, dmg: 100 },
   砂金: { hp: 0, atk: 0, def: 100, speed: 100, cpct: 100, cdmg: 100, stance: 0, heal: 0, recharge: 75, effPct: 0, effDef: 50, dmg: 100 },
   加拉赫: { hp: 75, atk: 0, def: 75, speed: 100, cpct: 0, cdmg: 0, stance: 100, heal: 100, recharge: 75, effPct: 0, effDef: 50, dmg: 0 },
   黄泉: { hp: 0, atk: 100, def: 0, speed: 75, cpct: 100, cdmg: 100, stance: 0, heal: 0, recharge: 0, effPct: 0, effDef: 0, dmg: 100 },

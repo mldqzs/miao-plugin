@@ -15,8 +15,8 @@
     "hp": 1164.24,
     "def": 606.38,
     "speed": 107,
-    "cpct": 5.0,
-    "cdmg": 50.0,
+    "cpct": 5,
+    "cdmg": 50,
     "aggro": 100
   },
   "growAttr": {
@@ -464,7 +464,148 @@
       "desc": "砂金•戏浪造成的<u>欢愉伤害</u><u>增笑</u><nobr>$2[i]%</nobr>。砂金•戏浪施放<nobr>$1[i]</nobr>次欢愉技后，其后续施放的所有欢愉技均为【All in！敬炽烈一夏】，且在阿哈时刻外施放欢愉技【All in！敬炽烈一夏】造成额外伤害时不再消耗【热意】。"
     }
   },
-  "attr": {},
+  "attr": {
+    "0": {
+      "promote": 0,
+      "maxLevel": 20,
+      "cost": {},
+      "grow": {
+        "atk": 3.3,
+        "hp": 7.92,
+        "def": 4.125,
+        "speed": 0
+      },
+      "attrs": {
+        "atk": 66,
+        "hp": 158.4,
+        "def": 82.5,
+        "speed": 107,
+        "cpct": 5,
+        "cdmg": 50,
+        "aggro": 100
+      }
+    },
+    "1": {
+      "promote": 1,
+      "maxLevel": 30,
+      "cost": {},
+      "grow": {
+        "atk": 3.3,
+        "hp": 7.92,
+        "def": 4.125,
+        "speed": 0
+      },
+      "attrs": {
+        "atk": 92.4,
+        "hp": 221.76,
+        "def": 115.5,
+        "speed": 107,
+        "cpct": 5,
+        "cdmg": 50,
+        "aggro": 100
+      }
+    },
+    "2": {
+      "promote": 2,
+      "maxLevel": 40,
+      "cost": {},
+      "grow": {
+        "atk": 3.3,
+        "hp": 7.92,
+        "def": 4.125,
+        "speed": 0
+      },
+      "attrs": {
+        "atk": 118.8,
+        "hp": 285.12,
+        "def": 148.5,
+        "speed": 107,
+        "cpct": 5,
+        "cdmg": 50,
+        "aggro": 100
+      }
+    },
+    "3": {
+      "promote": 3,
+      "maxLevel": 50,
+      "cost": {},
+      "grow": {
+        "atk": 3.3,
+        "hp": 7.92,
+        "def": 4.125,
+        "speed": 0
+      },
+      "attrs": {
+        "atk": 145.2,
+        "hp": 348.48,
+        "def": 181.5,
+        "speed": 107,
+        "cpct": 5,
+        "cdmg": 50,
+        "aggro": 100
+      }
+    },
+    "4": {
+      "promote": 4,
+      "maxLevel": 60,
+      "cost": {},
+      "grow": {
+        "atk": 3.3,
+        "hp": 7.92,
+        "def": 4.125,
+        "speed": 0
+      },
+      "attrs": {
+        "atk": 171.6,
+        "hp": 411.84,
+        "def": 214.5,
+        "speed": 107,
+        "cpct": 5,
+        "cdmg": 50,
+        "aggro": 100
+      }
+    },
+    "5": {
+      "promote": 5,
+      "maxLevel": 70,
+      "cost": {},
+      "grow": {
+        "atk": 3.3,
+        "hp": 7.92,
+        "def": 4.125,
+        "speed": 0
+      },
+      "attrs": {
+        "atk": 198,
+        "hp": 475.2,
+        "def": 247.5,
+        "speed": 107,
+        "cpct": 5,
+        "cdmg": 50,
+        "aggro": 100
+      }
+    },
+    "6": {
+      "promote": 6,
+      "maxLevel": 80,
+      "cost": {},
+      "grow": {
+        "atk": 3.3,
+        "hp": 7.92,
+        "def": 4.125,
+        "speed": 0
+      },
+      "attrs": {
+        "atk": 224.4,
+        "hp": 538.56,
+        "def": 280.5,
+        "speed": 107,
+        "cpct": 5,
+        "cdmg": 50,
+        "aggro": 100
+      }
+    }
+  },
   "tree": {
     "1513201": {
       "key": "cpct",
@@ -480,11 +621,11 @@
     },
     "1513204": {
       "key": "elation",
-      "value": 4.0
+      "value": 4
     },
     "1513205": {
       "key": "cpct",
-      "value": 4.0
+      "value": 4
     },
     "1513206": {
       "key": "speed",
@@ -492,11 +633,11 @@
     },
     "1513207": {
       "key": "cpct",
-      "value": 4.0
+      "value": 4
     },
     "1513208": {
       "key": "elation",
-      "value": 6.0
+      "value": 6
     },
     "1513209": {
       "key": "speed",
@@ -583,7 +724,7 @@
       "desc": "",
       "cost": {},
       "data": {
-        "elation": 4.0
+        "elation": 4
       }
     },
     "1513205": {
@@ -595,7 +736,7 @@
       "desc": "",
       "cost": {},
       "data": {
-        "cpct": 4.0
+        "cpct": 4
       }
     },
     "1513206": {
@@ -619,7 +760,7 @@
       "desc": "",
       "cost": {},
       "data": {
-        "cpct": 4.0
+        "cpct": 4
       }
     },
     "1513208": {
@@ -631,7 +772,7 @@
       "desc": "",
       "cost": {},
       "data": {
-        "elation": 6.0
+        "elation": 6
       }
     },
     "1513209": {
