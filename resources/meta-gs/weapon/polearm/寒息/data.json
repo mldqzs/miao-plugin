@@ -1,9 +1,9 @@
 {
   "id": 13435,
   "name": "寒息",
-  "affixTitle": "霜原遗息",
+  "affixTitle": "万顷一掷",
   "star": 4,
-  "desc": "A spear of solid ice imbued with an icy chill. It is said that it once belonged to the Belyi Tsar who ruled Snezhnaya in the distant past.",
+  "desc": "萦绕着寒意的坚冰长枪，据说在遥远的过去曾被统御至冬的白沙皇持有。",
   "attr": {
     "atk": {
       "1": 42.4,
@@ -23,7 +23,7 @@
     },
     "bonusKey": "recharge",
     "bonusData": {
-      "1": 10,
+      "1": 10.0,
       "20": 17.67,
       "40": 25.75,
       "50": 29.79,
@@ -40,26 +40,26 @@
     }
   },
   "materials": {
-    "weapon": "未知",
-    "monster": "未知",
-    "normal": "未知"
+    "weapon": "藏窖灵浆的恣意",
+    "monster": "沉积增生物",
+    "normal": "源生嵌合体"
   },
   "affixData": {
-    "text": "元素战技命中敌人后，攻击力提升$[0]，元素充能效率提升$[1]，持续10秒。",
+    "text": "触发冰元素或水元素相关反应后的15秒内，装备者的攻击力提升$[0]，并为队伍中自己的其他角色恢复$[1]点元素能量。该效果每16秒至多触发一次。",
     "datas": {
       "0": [
-        "16%",
         "20%",
-        "24%",
-        "28%",
-        "32%"
+        "25%",
+        "30%",
+        "35%",
+        "40%"
       ],
       "1": [
-        "12%",
-        "15%",
-        "18%",
-        "21%",
-        "24%"
+        "6",
+        "7.5",
+        "9",
+        "10.5",
+        "12"
       ]
     }
   }
