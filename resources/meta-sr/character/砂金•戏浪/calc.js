@@ -1,78 +1,73 @@
 export const details = [{
   title: '普攻伤害',
-  dmg: ({}, dmg) => dmg(140, 'a')
+  dmg: ({ talent }, dmg) => dmg(talent.a['技能伤害'], 'a')
 }, {
-  title: '战技群攻伤害',
-  params: { GoodShow: true },
-  dmg: ({}, dmg) => dmg(240, 'e')
+  title: '战技伤害',
+  dmg: ({ talent }, dmg) => dmg(talent.e['技能伤害'], 'e')
 }, {
-  title: '战技好活当赏欢愉伤害',
-  params: { GoodShow: true },
-  dmg: ({}, dmg) => dmg(40, 'xe', 'elation')
+  title: '战技欢愉伤害',
+  params: { punchline: 30 },
+  dmg: ({ talent }, dmg) => dmg(talent.t['战技额外伤害'], 't', 'elation')
 }, {
-  title: '终结技群攻伤害',
-  params: { GoodShow: true, UltSpeed: true },
-  dmg: ({}, dmg) => dmg(400, 'q')
+  title: '大招伤害',
+  dmg: ({ talent }, dmg) => dmg(talent.q['技能伤害'], 'q')
 }, {
-  title: '终结技好活当赏欢愉伤害',
-  params: { GoodShow: true, UltSpeed: true },
-  dmg: ({}, dmg) => dmg(72, 'xe', 'elation')
+  title: '大招欢愉伤害',
+  params: { punchline: 30 },
+  dmg: ({ talent }, dmg) => dmg(talent.t['终结技额外伤害'], 't', 'elation')
 }, {
-  title: '举杯！敬炽烈一夏总伤害',
-  params: { ElationSkill: true, tArtisBuffCount: 5 },
-  dmg: ({}, dmg) => dmg(60 + 18 * 10, 'xe', 'elation')
+  title: '天赋欢愉技伤害',
+  params: { punchline: 20 },
+  dmg: ({ talent }, dmg) => dmg(talent.xe['技能伤害'] + talent.xe['额外伤害'] * 10, 'xe', 'elation')
 }, {
-  title: 'All in！敬炽烈一夏30热意总伤害',
-  params: { ElationSkill: true, AllIn: true, Heat: 30, tArtisBuffCount: 5 },
-  dmg: ({ params }, dmg) => dmg(60 + 18 * 10 + 18 * (params.Heat || 30), 'xe', 'elation')
+  title: '阿哈时刻伤害',
+  params: { punchline: 40 },
+  // 热意按上限计算：2命前30点，2命后（含2命）50点
+  dmg: ({ talent, cons }, dmg) => dmg(talent.xe2['技能伤害'] + talent.xe2['额外伤害'] * 10 + talent.xe2['每点【热意】提升伤害'] * (cons >= 2 ? 50 : 30), 'xe2', 'elation')
 }]
 
-export const defDmgIdx = 6
-export const defDmgKey = 'xe'
-export const defParams = { ElationSkill: true, AllIn: true, Heat: 30, tArtisBuffCount: 5 }
-export const mainAttr = 'atk,cpct,cdmg,speed,recharge,dmg'
+export const defDmgIdx = 5
+export const mainAttr = 'hp,cpct,cdmg'
 
 export const buffs = [{
-  title: '行迹-极乐派对：基于速度提高欢愉度[joy]%',
+  title: '行迹-极乐派对：速度大于等于140时，使自身欢愉度提高30%，之后每超过1点速度使自身欢愉度额外提高1%，最多计入200点超出的速度',
   tree: 1,
-  sort: 9,
   data: {
-    joy: ({ attr, calc }) => Math.min(Math.max(calc(attr.speed) - 120, 0) / 2 * 1.5 + 10, 70)
+    joy: ({ attr }) => attr.speed >= 140 ? 30 + Math.min(attr.speed - 140, 200) : 0
   }
 }, {
-  title: '行迹-纵享惊涛：单欢愉命途时欢愉技视为追加攻击'
+  title: '行迹-纵享惊涛：队伍中存在1名其他「欢愉」命途角色时，我方全体欢愉度提高20%，砂金•戏浪额外提高80%',
+  tree: 2,
+  data: {
+    joy: 100
+  }
 }, {
-  title: '行迹-旧梦淘金：暴击伤害提高[cdmg]%，队友行动后全队暴击伤害提高[teamCdmg]%',
+  title: '行迹-旧梦淘金：暴击伤害提高48%，队友施放普攻、战技、追加攻击或终结技后，我方全体暴击伤害额外提高48%',
   tree: 3,
   data: {
-    cdmg: 36,
-    teamCdmg: 24
+    cdmg: 96
   }
 }, {
-  check: ({ params }) => params.UltSpeed === true,
-  title: '砂金•戏浪Q：速度提高[speedPct]%',
+  title: '笑点计算：计算笑点用',
   data: {
-    speedPct: 30
+    punchline: ({ params }) => params.punchline
   }
 }, {
   title: '砂金•戏浪1魂：全属性抗性穿透提高[kx]%',
   cons: 1,
   data: {
-    kx: 20
+    kx: 24
   }
 }, {
-  title: '砂金•戏浪4魂：施放战技后我方全体伤害无视敌方防御[ignore]%',
+  title: '砂金•戏浪4魂：施放战技时，我方全体造成的伤害无视敌方目标[ignore]%的防御力',
   cons: 4,
   data: {
-    ignore: 16
+    ignore: 18
   }
 }, {
-  check: ({ params }) => params.ElationSkill === true,
-  title: '砂金•戏浪6魂：欢愉伤害增笑[elevated]%',
+  title: '砂金•戏浪6魂：砂金•戏浪造成的欢愉伤害增笑[merrymakes]%',
   cons: 6,
   data: {
-    elevated: 60
+    merrymakes: 25
   }
 }]
-
-export const createdBy = '小青模拟'

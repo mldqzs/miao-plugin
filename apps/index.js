@@ -7,8 +7,9 @@ import help from './help.js'
 import admin from './admin.js'
 import gacha from './gacha.js'
 import bh3 from './bh3.js'
+import alias from './alias.js'
 
-let apps = { character, poke, profile, stat, wiki, gacha, admin, help, bh3 }
+let apps = { character, poke, profile, stat, wiki, gacha, admin, help, bh3, alias }
 let rules = {} // v3
 for (let key in apps) {
   rules[`${key}`] = apps[key].v3App()
