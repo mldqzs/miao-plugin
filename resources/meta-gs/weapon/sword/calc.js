@@ -314,7 +314,7 @@ export default function (step, staticStep) {
       }
     }],
     熔猎异端之刃: {
-      title: '施放元素战技后，每秒都将基于上一秒记录的移动距离，获得最高[atkPct]%的攻击力加成]',
+      title: '施放元素战技后，每秒都将基于上一秒记录的移动距离，获得最高[atkPct]%的攻击力加成',
       data: {
         atkPct: step(36)
       }
@@ -328,7 +328,9 @@ export default function (step, staticStep) {
       check: ({ element }) => ['冰', '雷', '风'].includes(element),
       title: '触发星烁反应后，星烁反应伤害提升[stellarConduct]%',
       refine: {
-        stellarConduct: step(16)
+        stellarConduct: step(16),
+        stellarSwirl: step(16),
+        stellarVortex: step(16)
       }
     }],
     白湖冬羽: [{
@@ -342,6 +344,14 @@ export default function (step, staticStep) {
       refine: {
         cdmg: step(50, 15)
       }
-    }]
+    }],
+    星锋剑: {
+      check: ({ attr }) => ['空', '荧'].includes(attr.characterName),
+      title: '旅行者装备时，命中敌人后，攻击力提升[atkPct]%；与7种元素共鸣过，旅行者的暴击伤害就会总共提升[cdmg]%',
+      refine: {
+        atkPct: step(16),
+        cdmg: 42
+      }
+    }
   }
 }

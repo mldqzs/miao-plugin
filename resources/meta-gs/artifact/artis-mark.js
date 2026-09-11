@@ -97,7 +97,7 @@ export const usefulAttr = {
   玛薇卡: { hp: 0, atk: 75, def: 0, cpct: 100, cdmg: 100, mastery: 85, dmg: 100, phy: 0, recharge: 0, heal: 0 },
   茜特菈莉: { hp: 0, atk: 50, def: 0, cpct: 50, cdmg: 50, mastery: 100, dmg: 80, phy: 0, recharge: 100, heal: 0 },
   蓝砚: { hp: 0, atk: 100, def: 0, cpct: 0, cdmg: 0, mastery: 30, dmg: 0, phy: 0, recharge: 75, heal: 0 },
-  梦见月瑞希: { hp: 0, atk: 0, def: 0, cpct: 0, cdmg: 0, mastery: 100, dmg: 80, phy: 0, recharge: 45, heal: 95 },
+  梦见月瑞希: { hp: 0, atk: 0, def: 0, cpct: 0, cdmg: 0, mastery: 100, dmg: 0, phy: 0, recharge: 75, heal: 95 },
   伊安珊: { hp: 0, atk: 100, def: 0, cpct: 0, cdmg: 0, mastery: 0, dmg: 0, phy: 0, recharge: 100, heal: 0 },
   瓦雷莎: { hp: 0, atk: 90, def: 0, cpct: 100, cdmg: 100, mastery: 0, dmg: 100, phy: 0, recharge: 40, heal: 0 },
   爱可菲: { hp: 0, atk: 100, def: 0, cpct: 100, cdmg: 100, mastery: 0, dmg: 99, phy: 0, recharge: 75, heal: 95 },
@@ -119,7 +119,7 @@ export const usefulAttr = {
   尼可: { hp: 0, atk: 100, def: 0, cpct: 0, cdmg: 0, mastery: 0, dmg: 0, phy: 0, recharge: 50, heal: 0 },
   布伦妮: { hp: 0, atk: 100, def: 0, cpct: 0, cdmg: 0, mastery: 0, dmg: 0, phy: 0, recharge: 100, heal: 0 },
   洛恩: { hp: 0, atk: 100, def: 0, cpct: 100, cdmg: 100, mastery: 0, dmg: 100, phy: 0, recharge: 30, heal: 0 },
-  桑多涅: { hp: 0, atk: 100, def: 0, cpct: 100, cdmg: 100, mastery: 60, dmg: 0, phy: 0, recharge: 50, heal: 0 },
+  桑多涅: { hp: 0, atk: 85, def: 0, cpct: 100, cdmg: 100, mastery: 60, dmg: 0, phy: 0, recharge: 50, heal: 0 },
   奥黛塔: { hp: 0, atk: 100, def: 0, cpct: 100, cdmg: 100, mastery: 75, dmg: 0, phy: 0, recharge: 50, heal: 0 },
   阿罗夏: { hp: 0, atk: 100, def: 0, cpct: 0, cdmg: 0, mastery: 0, dmg: 0, phy: 0, recharge: 100, heal: 99 }
 }
