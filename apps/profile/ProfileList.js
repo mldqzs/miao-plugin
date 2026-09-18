@@ -1,7 +1,66 @@
 import lodash from 'lodash'
 import { getTargetUid } from './ProfileCommon.js'
-import { Common, Data } from '#miao'
+import { Cfg, Common, Data } from '#miao'
 import { Button, ProfileRank, Player, Character } from '#miao.models'
+
+function getProfileScore (profile) {
+  try {
+    const score = profile?.getArtisMark(false)?._mark
+    return Number.isFinite(Number(score)) ? Number(score) : false
+  } catch (err) {
+    return false
+  }
+}
+
+export function snapshotProfiles (player, ids) {
+  const ret = {}
+  for (const id of ids || []) {
+    const profile = player.getProfile(id)
+    if (!profile) continue
+    ret[id] = {
+      score: getProfileScore(profile),
+      markClass: profile.getArtisMark(false)?.markClass || '',
+      weapon: profile.weapon?.id || profile.weapon?.name || '',
+      update: profile._update || profile._time || 0
+    }
+  }
+  return ret
+}
+
+export function pickImprovedProfile (player, ids, before) {
+  const candidates = []
+  for (const id of ids || []) {
+    const profile = player.getProfile(id)
+    const old = before?.[id]
+    if (!profile || !old) continue
+    const score = getProfileScore(profile)
+    if (score === false || old.score === false) continue
+    const delta = score - old.score
+    const classChanged = old.markClass && profile.getArtisMark(false)?.markClass !== old.markClass
+    if (delta < 1 && !(delta > 0 && classChanged)) continue
+    candidates.push({ profile, delta, score })
+  }
+  candidates.sort((a, b) => b.delta - a.delta || b.score - a.score || String(a.profile.id).localeCompare(String(b.profile.id)))
+  return candidates[0]?.profile || false
+}
+
+async function sendSuggestedProfile (e, player, profile) {
+  if (!profile || !Cfg.get('profileAutoQuery', true)) return
+  try {
+    const { default: ProfileDetail } = await import('./ProfileDetail.js')
+    const detailEvent = Object.create(e)
+    detailEvent.uid = player.uid
+    detailEvent.game = player.game
+    detailEvent.isSr = player.isSr
+    detailEvent.avatar = profile.id
+    detailEvent._profile = profile
+    const prefix = player.isSr ? '*' : '#'
+    const tip = `你可能想查询【${prefix}${profile.name}面板】，已执行该指令`
+    await ProfileDetail.render(detailEvent, profile.char, 'profile', { tip })
+  } catch (err) {
+    logger.mark(`自动发送${profile.name}面板失败: ${err}`)
+  }
+}
 
 const ProfileList = {
   /**
@@ -19,7 +78,8 @@ const ProfileList = {
 
     // 数据更新
     let player = Player.create(e)
-    await player.refreshProfile(2, fromMys)    
+    const before = snapshotProfiles(player, player.getAvatarIds())
+    await player.refreshProfile(2, fromMys)
 
     if (!player?._update?.length) {
       e._isReplyed || e.reply(['获取角色面板数据失败，请确认角色已在游戏内橱窗展示，并开放了查看详情。设置完毕后请5分钟后再进行请求~', new Button(e).profileList(uid)])
@@ -38,6 +98,7 @@ const ProfileList = {
       } else {
         e.newChar = ret
         e.isNewCharFromMys = fromMys
+        e.suggestProfile = pickImprovedProfile(player, player._update, before)
         return await ProfileList.render(e)
       }
     }
@@ -94,6 +155,7 @@ const ProfileList = {
     let chars = []
     let msg = ''
     let newChar = {}
+    let suggestChar = e.suggestProfile?.abbr || e.suggestProfile?.name || ''
     if (e.newChar) {
       msg = '获取角色面板数据成功'
       newChar = e.newChar
@@ -155,6 +217,7 @@ const ProfileList = {
       save_id: uid,
       uid,
       chars,
+      suggestChar,
       servName,
       hasNew,
       msg,
@@ -167,7 +230,11 @@ const ProfileList = {
     if (!img) {
       return e.reply('面板图片生成失败，请稍后重试...')
     }
-    return e.reply([img, new Button(e).profileList(uid, newChar)])
+    const msgRet = await e.reply([img, new Button(e).profileList(uid, newChar)])
+    if (msgRet && e.suggestProfile) {
+      await sendSuggestedProfile(e, player, e.suggestProfile)
+    }
+    return msgRet
   },
 
   /**

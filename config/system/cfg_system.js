@@ -76,6 +76,12 @@ export const cfgSchema = {
         key: '面板替换',
         def: true
       },
+      profileAutoQuery: {
+        title: '刷新后推荐查询',
+        key: '推荐查询',
+        def: true,
+        desc: '刷新面板后，自动查询本次更新中圣遗物或遗器评分提升最明显的角色面板'
+      },
       groupRank: {
         title: '群面板排名',
         key: '排名',

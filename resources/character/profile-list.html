@@ -7,7 +7,6 @@
 
 
 {{block 'main'}}
-{{set demo = chars[0]?.abbr || "雷神" }}
 <div class="profile-cont game-{{game}}">
   <div class="head-box">
     <div class="title">#面板列表
@@ -16,8 +15,9 @@
     {{if msg}}
     <div class="label">{{msg}}</div>
     {{/if}}
-    <div class="label">你可以使用<span>#{{demo}}面板</span>、<span>#{{demo}}伤害</span>、<span>#{{demo}}圣遗物</span>命令来查看面板信息了
-    </div>
+    {{if suggestChar}}
+    <div class="label">你可以使用<span>#{{suggestChar}}面板</span>、<span>#{{suggestChar}}伤害</span>、<span>#{{suggestChar}}圣遗物</span>命令来查看面板信息了</div>
+    {{/if}}
   </div>
   <div class="cont group-rank-tip {{groupRank?'has-rank':'no-rank'}}">
     <div class="cont-title">

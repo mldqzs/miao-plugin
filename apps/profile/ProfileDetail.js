@@ -255,7 +255,10 @@ let ProfileDetail = {
       changeProfile: e._profileMsg
     }
     // 渲染图像
-    const msgRes = await e.reply([await Common.render('character/profile-detail', renderData, { e, scale: 1.6, retType: 'base64' }), new Button(e).profile(char, uid)])
+    const profileImg = await Common.render('character/profile-detail', renderData, { e, scale: 1.6, retType: 'base64' })
+    const profileMsg = [profileImg, new Button(e).profile(char, uid)]
+    if (params.tip) profileMsg.unshift(params.tip)
+    const msgRes = await e.reply(profileMsg)
     if (msgRes) {
       // 如果消息发送成功，就将message_id和图片路径存起来，3小时过期
       const message_id = [e.message_id]
