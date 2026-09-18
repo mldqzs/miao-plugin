@@ -31,16 +31,23 @@ export function pickImprovedProfile (player, ids, before) {
   const candidates = []
   for (const id of ids || []) {
     const profile = player.getProfile(id)
-    const old = before?.[id]
-    if (!profile || !old) continue
+    if (!profile) continue
     const score = getProfileScore(profile)
-    if (score === false || old.score === false) continue
+    if (score === false) continue
+
+    const old = before?.[id]
+    if (!old) {
+      candidates.push({ profile, delta: 0, score, isNew: true })
+      continue
+    }
+
+    if (old.score === false) continue
     const delta = score - old.score
     const classChanged = old.markClass && profile.getArtisMark(false)?.markClass !== old.markClass
     if (delta < 1 && !(delta > 0 && classChanged)) continue
-    candidates.push({ profile, delta, score })
+    candidates.push({ profile, delta, score, isNew: false })
   }
-  candidates.sort((a, b) => b.delta - a.delta || b.score - a.score || String(a.profile.id).localeCompare(String(b.profile.id)))
+  candidates.sort((a, b) => Number(a.isNew) - Number(b.isNew) || b.delta - a.delta || b.score - a.score || String(a.profile.id).localeCompare(String(b.profile.id)))
   return candidates[0]?.profile || false
 }
 
