@@ -15,11 +15,22 @@ function getProfileScore (profile) {
 export function snapshotProfiles (player, ids) {
   const ret = {}
   for (const id of ids || []) {
-    const profile = player.getProfile(id)
+    let profile
+    try {
+      profile = player.getProfile(id)
+    } catch (err) {
+      continue
+    }
     if (!profile) continue
+    let markClass = ''
+    try {
+      markClass = profile.getArtisMark(false)?.markClass || ''
+    } catch (err) {
+      markClass = ''
+    }
     ret[id] = {
       score: getProfileScore(profile),
-      markClass: profile.getArtisMark(false)?.markClass || '',
+      markClass,
       weapon: profile.weapon?.id || profile.weapon?.name || '',
       update: profile._update || profile._time || 0
     }
@@ -30,24 +41,34 @@ export function snapshotProfiles (player, ids) {
 export function pickImprovedProfile (player, ids, before) {
   const candidates = []
   for (const id of ids || []) {
-    const profile = player.getProfile(id)
+    let profile
+    try {
+      profile = player.getProfile(id)
+    } catch (err) {
+      continue
+    }
     if (!profile) continue
-    const score = getProfileScore(profile)
-    if (score === false) continue
 
+    const score = getProfileScore(profile)
     const old = before?.[id]
     if (!old) {
       candidates.push({ profile, delta: 0, score, isNew: true })
       continue
     }
 
-    if (old.score === false) continue
+    if (score === false || old.score === false) continue
     const delta = score - old.score
-    const classChanged = old.markClass && profile.getArtisMark(false)?.markClass !== old.markClass
+    let markClass = ''
+    try {
+      markClass = profile.getArtisMark(false)?.markClass || ''
+    } catch (err) {
+      markClass = ''
+    }
+    const classChanged = old.markClass && markClass !== old.markClass
     if (delta < 1 && !(delta > 0 && classChanged)) continue
     candidates.push({ profile, delta, score, isNew: false })
   }
-  candidates.sort((a, b) => Number(a.isNew) - Number(b.isNew) || b.delta - a.delta || b.score - a.score || String(a.profile.id).localeCompare(String(b.profile.id)))
+  candidates.sort((a, b) => Number(a.isNew) - Number(b.isNew) || Number(b.score === false) - Number(a.score === false) || b.delta - a.delta || (b.score === false ? 0 : b.score) - (a.score === false ? 0 : a.score) || String(a.profile.id).localeCompare(String(b.profile.id)))
   return candidates[0]?.profile || false
 }
 
@@ -61,6 +82,7 @@ async function sendSuggestedProfile (e, player, profile) {
     detailEvent.isSr = player.isSr
     detailEvent.avatar = profile.id
     detailEvent._profile = profile
+    detailEvent._autoProfile = true
     const prefix = player.isSr ? '*' : '#'
     const tip = `你可能想查询【${prefix}${profile.name}面板】，已执行该指令`
     await ProfileDetail.render(detailEvent, profile.char, 'profile', { tip })
@@ -238,7 +260,7 @@ const ProfileList = {
       return e.reply('面板图片生成失败，请稍后重试...')
     }
     const msgRet = await e.reply([img, new Button(e).profileList(uid, newChar)])
-    if (msgRet && e.suggestProfile) {
+    if (e.suggestProfile) {
       await sendSuggestedProfile(e, player, e.suggestProfile)
     }
     return msgRet

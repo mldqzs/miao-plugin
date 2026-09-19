@@ -27,7 +27,7 @@ let Cfg = {
       return true
     }
     let ret = lodash.get(cfg, rote)
-    return lodash.isUndefined(cfg) ? def : ret
+    return lodash.isUndefined(ret) ? def : ret
   },
   set (rote, val) {
     cfg[rote] = val

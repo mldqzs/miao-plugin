@@ -123,7 +123,9 @@ let ProfileDetail = {
   },
 
   async render (e, char, mode = 'profile', params = {}) {
-    let selfUser = await MysApi.initUser(e)
+    let selfUser = e._autoProfile
+      ? { getCfg: async (key, def) => def }
+      : await MysApi.initUser(e)
 
     if (!selfUser) {
       e.reply(['尚未绑定UID', new Button(e).bindUid()])
