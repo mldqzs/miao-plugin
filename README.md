@@ -7,6 +7,9 @@
 > 📌 本分支额外集成了 **崩坏三（崩坏3）** 查询功能，使用 `!` 前缀（Cookie 与原神共用，支持 `@他人` 查询）。
 > 常用：`!角色` `!武器` `!总览` `!体力` `!超弦空间`/`!深渊` `!记忆战场` `!往世乐土` `!周报` `!水晶` `!uid`，完整列表见 `#喵喵帮助`。
 
+> [!IMPORTANT]
+> 如果你正在使用原版 Ark-plugin，并且曾通过 Ark 替换过 miao-plugin 文件，请先发送 `#ark恢复文件miao-rank` 恢复被替换的文件，再将 Ark-plugin 切换到 [mldqzs/ark-plugin](https://github.com/mldqzs/ark-plugin) 分支，以适配本分支的 miao-plugin。
+
 ---
 
 ## 安装与更新
