@@ -178,7 +178,19 @@ export async function manageRank(e) {
   }
 }
 
-async function renderCharRankList({ e, uids, char, mode, groupId }) {
+let rankRenderer = defaultRenderCharRankList
+
+export function setRankRenderer(renderer) {
+  if (typeof renderer !== 'function') return false
+  rankRenderer = renderer
+  return true
+}
+
+export function renderCharRankList(args) {
+  return rankRenderer(args)
+}
+
+async function defaultRenderCharRankList({ e, uids, char, mode, groupId }) {
   let list = []
   for (let ds of uids) {
     let uid = ds.uid || ds.value
