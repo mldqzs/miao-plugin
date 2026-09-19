@@ -40,23 +40,32 @@ export function snapshotProfiles (player, ids) {
 
 export function pickImprovedProfile (player, ids, before) {
   const candidates = []
+  const profiles = player.getProfiles()
+  const profileCandidates = new Map()
   for (const id of ids || []) {
-    let profile
-    try {
-      profile = player.getProfile(id)
-    } catch (err) {
-      continue
+    const profile = profiles[id] || Object.values(profiles).find(item => String(item.id) === String(id))
+    if (profile) profileCandidates.set(String(profile.id), profile)
+  }
+  // 某些服务会把增强形态 ID 写入 _update，而本地 profile 使用基础 ID。
+  // 用更新时间补齐这类 ID 不一致，但不把未更新角色误判为候选。
+  for (const profile of Object.values(profiles)) {
+    const old = before?.[profile.id]
+    if (!old || (profile._update && profile._update > old.update)) {
+      profileCandidates.set(String(profile.id), profile)
     }
-    if (!profile) continue
+  }
 
+  for (const profile of profileCandidates.values()) {
+    const id = profile.id
     const score = getProfileScore(profile)
     const old = before?.[id]
-    if (!old) {
+    // 刷新前没有有效评分，说明本次才获得可用面板，按新面板处理。
+    if (!old || old.score === false) {
       candidates.push({ profile, delta: 0, score, isNew: true })
       continue
     }
 
-    if (score === false || old.score === false) continue
+    if (score === false) continue
     const delta = score - old.score
     let markClass = ''
     try {
@@ -68,12 +77,20 @@ export function pickImprovedProfile (player, ids, before) {
     if (delta < 1 && !(delta > 0 && classChanged)) continue
     candidates.push({ profile, delta, score, isNew: false })
   }
-  candidates.sort((a, b) => Number(a.isNew) - Number(b.isNew) || Number(b.score === false) - Number(a.score === false) || b.delta - a.delta || (b.score === false ? 0 : b.score) - (a.score === false ? 0 : a.score) || String(a.profile.id).localeCompare(String(b.profile.id)))
+  candidates.sort((a, b) =>
+    Number(a.isNew) - Number(b.isNew) ||
+    Number(b.score === false) - Number(a.score === false) ||
+    b.delta - a.delta ||
+    (b.score === false ? 0 : b.score) - (a.score === false ? 0 : a.score) ||
+    String(a.profile.id).localeCompare(String(b.profile.id))
+  )
   return candidates[0]?.profile || false
 }
 
 async function sendSuggestedProfile (e, player, profile) {
-  if (!profile || !Cfg.get('profileAutoQuery', true)) return
+  const enabled = Cfg.get('profileAutoQuery', true)
+  logger.mark(`[自动推荐] 发送阶段 candidate=${profile?.name || 'none'}(${profile?.id || 'none'}), enabled=${enabled}`)
+  if (!profile || !enabled) return
   try {
     const { default: ProfileDetail } = await import('./ProfileDetail.js')
     const detailEvent = Object.create(e)
@@ -85,9 +102,11 @@ async function sendSuggestedProfile (e, player, profile) {
     detailEvent._autoProfile = true
     const prefix = player.isSr ? '*' : '#'
     const tip = `你可能想查询【${prefix}${profile.name}面板】，已执行该指令`
+    logger.mark(`[自动推荐] 开始渲染 ${profile.name}(${profile.id})`)
     await ProfileDetail.render(detailEvent, profile.char, 'profile', { tip })
+    logger.mark(`[自动推荐] 渲染完成 ${profile.name}(${profile.id})`)
   } catch (err) {
-    logger.mark(`自动发送${profile.name}面板失败: ${err}`)
+    logger.mark(`[自动推荐] 发送${profile?.name || '未知角色'}面板失败: ${err.stack || err}`)
   }
 }
 
@@ -127,7 +146,11 @@ const ProfileList = {
       } else {
         e.newChar = ret
         e.isNewCharFromMys = fromMys
+        const updatedIds = (player._update || []).map(String)
+        const profileIds = Object.keys(player.getProfiles())
+        logger.mark(`[自动推荐] 候选检查 uid=${player.uid}, game=${player.game}, source=${fromMys ? 'mys' : 'profile'}, update=[${updatedIds.join(',')}], before=[${Object.keys(before).join(',')}], profiles=[${profileIds.join(',')}]`)
         e.suggestProfile = pickImprovedProfile(player, player._update, before)
+        logger.mark(`[自动推荐] 选择结果 ${e.suggestProfile ? `${e.suggestProfile.name}(${e.suggestProfile.id})` : 'none'}`)
         return await ProfileList.render(e)
       }
     }
