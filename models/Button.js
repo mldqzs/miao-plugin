@@ -33,7 +33,7 @@ export default class Button {
       { text: `${char.name}圣遗物`, callback: `${this.prefix}${char.name}圣遗物${uid}` },
     ],[
       { text: `${char.name}图鉴`, callback: `${this.prefix}${char.name}图鉴` },
-      { text: `${char.name}攻略`, callback: `${this.prefix}${char.name}攻略` },
+      { text: `${char.name}攻略`, callback: this.prefix === "*" ? `#星铁${char.name}攻略` : `#${char.name}攻略` },
     ],[
       { text: `${char.name}命座`, callback: `${this.prefix}${char.name}命座` },
       { text: `${char.name}天赋`, callback: `${this.prefix}${char.name}天赋` },

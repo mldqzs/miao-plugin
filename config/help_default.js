@@ -130,8 +130,8 @@ export const helpList = [{
     desc: '查看本期深渊使用或出场统计'
   }, {
     icon: 20,
-    title: '#刻晴攻略',
-    desc: '西风驿站攻略'
+    title: '#刻晴攻略 #星铁黄泉攻略',
+    desc: '多来源攻略合并查询'
   }, {
     icon: 60,
     title: '#心海图鉴 #护摩',
