@@ -12,6 +12,14 @@ function getProfileScore (profile) {
   }
 }
 
+function getProfileMarkClass (profile) {
+  try {
+    return profile?.getArtisMark(false)?.markClass || ''
+  } catch (err) {
+    return ''
+  }
+}
+
 export function snapshotProfiles (player, ids) {
   const ret = {}
   for (const id of ids || []) {
@@ -22,15 +30,9 @@ export function snapshotProfiles (player, ids) {
       continue
     }
     if (!profile) continue
-    let markClass = ''
-    try {
-      markClass = profile.getArtisMark(false)?.markClass || ''
-    } catch (err) {
-      markClass = ''
-    }
     ret[id] = {
       score: getProfileScore(profile),
-      markClass,
+      markClass: getProfileMarkClass(profile),
       weapon: profile.weapon?.id || profile.weapon?.name || '',
       update: profile._update || profile._time || 0
     }
@@ -67,13 +69,7 @@ export function pickImprovedProfile (player, ids, before) {
 
     if (score === false) continue
     const delta = score - old.score
-    let markClass = ''
-    try {
-      markClass = profile.getArtisMark(false)?.markClass || ''
-    } catch (err) {
-      markClass = ''
-    }
-    const classChanged = old.markClass && markClass !== old.markClass
+    const classChanged = old.markClass && getProfileMarkClass(profile) !== old.markClass
     if (delta < 1 && !(delta > 0 && classChanged)) continue
     candidates.push({ profile, delta, score, isNew: false })
   }
@@ -87,10 +83,12 @@ export function pickImprovedProfile (player, ids, before) {
   return candidates[0]?.profile || false
 }
 
+/**
+ * 刷新面板后自动发送「你可能想查询」的角色面板
+ * 由 #喵喵设置 推荐查询 开关（profileAutoQuery）控制
+ */
 async function sendSuggestedProfile (e, player, profile) {
-  const enabled = Cfg.get('profileAutoQuery', true)
-  logger.mark(`[自动推荐] 发送阶段 candidate=${profile?.name || 'none'}(${profile?.id || 'none'}), enabled=${enabled}`)
-  if (!profile || !enabled) return
+  if (!profile || !Cfg.get('profileAutoQuery', true)) return
   try {
     const { default: ProfileDetail } = await import('./ProfileDetail.js')
     const detailEvent = Object.create(e)
@@ -102,11 +100,9 @@ async function sendSuggestedProfile (e, player, profile) {
     detailEvent._autoProfile = true
     const prefix = player.isSr ? '*' : '#'
     const tip = `你可能想查询【${prefix}${profile.name}面板】，已执行该指令`
-    logger.mark(`[自动推荐] 开始渲染 ${profile.name}(${profile.id})`)
     await ProfileDetail.render(detailEvent, profile.char, 'profile', { tip })
-    logger.mark(`[自动推荐] 渲染完成 ${profile.name}(${profile.id})`)
   } catch (err) {
-    logger.mark(`[自动推荐] 发送${profile?.name || '未知角色'}面板失败: ${err.stack || err}`)
+    logger.error(`[推荐查询] ${profile.name}(${profile.id}) 面板发送失败`, err)
   }
 }
 
@@ -146,11 +142,9 @@ const ProfileList = {
       } else {
         e.newChar = ret
         e.isNewCharFromMys = fromMys
-        const updatedIds = (player._update || []).map(String)
-        const profileIds = Object.keys(player.getProfiles())
-        logger.mark(`[自动推荐] 候选检查 uid=${player.uid}, game=${player.game}, source=${fromMys ? 'mys' : 'profile'}, update=[${updatedIds.join(',')}], before=[${Object.keys(before).join(',')}], profiles=[${profileIds.join(',')}]`)
         e.suggestProfile = pickImprovedProfile(player, player._update, before)
-        logger.mark(`[自动推荐] 选择结果 ${e.suggestProfile ? `${e.suggestProfile.name}(${e.suggestProfile.id})` : 'none'}`)
+        const suggest = e.suggestProfile
+        logger.debug(`[推荐查询] uid:${player.uid} 更新${player._update.length}个角色，推荐：${suggest ? `${suggest.name}(${suggest.id})` : '无'}`)
         return await ProfileList.render(e)
       }
     }
